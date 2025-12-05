@@ -704,6 +704,15 @@ struct ActionBar: View {
                 showUninstallApps = true
             }
 
+            ActionButton(
+                title: "Quit",
+                icon: "power",
+                color: Color.red,
+                isLoading: false
+            ) {
+                NSApplication.shared.terminate(nil)
+            }
+
             Spacer()
 
             // Cache size indicator

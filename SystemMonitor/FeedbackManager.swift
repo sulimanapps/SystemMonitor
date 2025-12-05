@@ -6,16 +6,8 @@ enum FeedbackCategory: String, CaseIterable {
     case featureRequest = "Feature Request"
     case other = "Other"
 
-    var arabicName: String {
-        switch self {
-        case .bug: return "خطأ"
-        case .featureRequest: return "طلب ميزة"
-        case .other: return "أخرى"
-        }
-    }
-
     var displayName: String {
-        return "\(rawValue) | \(arabicName)"
+        return rawValue
     }
 }
 
@@ -26,16 +18,14 @@ class FeedbackManager: ObservableObject {
     @Published var showSuccess: Bool = false
     @Published var errorMessage: String = ""
 
-    private let feedbackFilePath: String
-
-    init() {
-        // Save feedback to the project directory
-        feedbackFilePath = NSHomeDirectory() + "/Desktop/SystemMonitor/feedback.txt"
+    private var feedbackFilePath: String {
+        let documentsPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+        return documentsPath.appendingPathComponent("SystemMonitor-Feedback.txt").path
     }
 
     func submitFeedback() {
         guard !feedbackText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
-            errorMessage = "Please enter feedback | الرجاء إدخال ملاحظات"
+            errorMessage = "Please enter your feedback"
             return
         }
 
@@ -52,12 +42,12 @@ class FeedbackManager: ObservableObject {
         let feedbackEntry = """
 
         ========================================
-        FEEDBACK REPORT | تقرير ملاحظات
+        FEEDBACK REPORT
         ========================================
         Date: \(readableDate)
         Timestamp: \(timestamp)
-        Category: \(selectedCategory.displayName)
-        App Version: 1.0.0
+        Category: \(selectedCategory.rawValue)
+        App Version: 2.0.0
         macOS: \(ProcessInfo.processInfo.operatingSystemVersionString)
         ----------------------------------------
 
@@ -81,8 +71,7 @@ class FeedbackManager: ObservableObject {
             } else {
                 // Create new file with header
                 let header = """
-                # SystemMonitor Feedback Log
-                # سجل ملاحظات مراقب النظام
+                # SystemMonitor Pro - Feedback Log
                 # Created: \(readableDate)
 
                 """
@@ -98,7 +87,7 @@ class FeedbackManager: ObservableObject {
         } catch {
             DispatchQueue.main.async {
                 self.isSubmitting = false
-                self.errorMessage = "Failed to save feedback | فشل حفظ الملاحظات"
+                self.errorMessage = "Failed to save feedback: \(error.localizedDescription)"
             }
         }
     }
@@ -106,6 +95,12 @@ class FeedbackManager: ObservableObject {
     func openFeedbackFile() {
         if FileManager.default.fileExists(atPath: feedbackFilePath) {
             NSWorkspace.shared.open(URL(fileURLWithPath: feedbackFilePath))
+        }
+    }
+
+    func openGitHubIssues() {
+        if let url = URL(string: "https://github.com/sulimanapps/SystemMonitor/issues/new") {
+            NSWorkspace.shared.open(url)
         }
     }
 

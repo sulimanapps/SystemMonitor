@@ -11,13 +11,8 @@ struct FeedbackView: View {
                 Image(systemName: "exclamationmark.bubble.fill")
                     .font(.title2)
                     .foregroundColor(.orange)
-                VStack(alignment: .leading, spacing: 2) {
-                    Text("Report Bug / Feedback")
-                        .font(.headline)
-                    Text("الإبلاغ عن خطأ / ملاحظات")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                }
+                Text("Report Bug / Feedback")
+                    .font(.headline)
                 Spacer()
                 Button(action: { isPresented = false }) {
                     Image(systemName: "xmark.circle.fill")
@@ -42,13 +37,8 @@ struct FeedbackView: View {
 
                     Text("Thank you!")
                         .font(.headline)
-                    Text("شكراً لك!")
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
 
                     Text("Your feedback has been saved.")
-                        .font(.caption)
-                    Text("تم حفظ ملاحظاتك.")
                         .font(.caption)
                         .foregroundColor(.secondary)
 
@@ -76,13 +66,8 @@ struct FeedbackView: View {
                     VStack(alignment: .leading, spacing: 16) {
                         // Category picker
                         VStack(alignment: .leading, spacing: 6) {
-                            HStack {
-                                Text("Category")
-                                    .font(.subheadline.weight(.semibold))
-                                Text("| الفئة")
-                                    .font(.caption)
-                                    .foregroundColor(.secondary)
-                            }
+                            Text("Category")
+                                .font(.subheadline.weight(.semibold))
 
                             Picker("Category", selection: $feedbackManager.selectedCategory) {
                                 ForEach(FeedbackCategory.allCases, id: \.self) { category in
@@ -94,17 +79,12 @@ struct FeedbackView: View {
 
                         // Description field
                         VStack(alignment: .leading, spacing: 6) {
-                            HStack {
-                                Text("Description")
-                                    .font(.subheadline.weight(.semibold))
-                                Text("| الوصف")
-                                    .font(.caption)
-                                    .foregroundColor(.secondary)
-                            }
+                            Text("Description")
+                                .font(.subheadline.weight(.semibold))
 
                             TextEditor(text: $feedbackManager.feedbackText)
                                 .font(.system(size: 12, design: .monospaced))
-                                .frame(height: 150)
+                                .frame(height: 120)
                                 .overlay(
                                     RoundedRectangle(cornerRadius: 6)
                                         .stroke(Color.gray.opacity(0.3), lineWidth: 1)
@@ -112,16 +92,11 @@ struct FeedbackView: View {
                                 .overlay(
                                     Group {
                                         if feedbackManager.feedbackText.isEmpty {
-                                            VStack(alignment: .leading) {
-                                                Text("Describe the bug or feature request...")
-                                                    .font(.caption)
-                                                    .foregroundColor(.secondary)
-                                                Text("صف الخطأ أو طلب الميزة...")
-                                                    .font(.caption)
-                                                    .foregroundColor(.secondary.opacity(0.7))
-                                            }
-                                            .padding(8)
-                                            .allowsHitTesting(false)
+                                            Text("Describe the bug or feature request...")
+                                                .font(.caption)
+                                                .foregroundColor(.secondary)
+                                                .padding(8)
+                                                .allowsHitTesting(false)
                                         }
                                     },
                                     alignment: .topLeading
@@ -135,9 +110,9 @@ struct FeedbackView: View {
                                 .foregroundColor(.orange)
 
                             Group {
-                                Text("• Be specific about what happened")
-                                Text("• Include steps to reproduce (for bugs)")
-                                Text("• Describe expected vs actual behavior")
+                                Text("- Be specific about what happened")
+                                Text("- Include steps to reproduce (for bugs)")
+                                Text("- Describe expected vs actual behavior")
                             }
                             .font(.caption)
                             .foregroundColor(.secondary)
@@ -162,13 +137,26 @@ struct FeedbackView: View {
                             Text("System Info (auto-included)")
                                 .font(.caption.weight(.semibold))
                                 .foregroundColor(.secondary)
-                            Text("App Version: 1.0.0")
+                            Text("App Version: 2.0.0")
                                 .font(.caption2)
                                 .foregroundColor(.secondary)
                             Text("macOS: \(ProcessInfo.processInfo.operatingSystemVersionString)")
                                 .font(.caption2)
                                 .foregroundColor(.secondary)
                         }
+
+                        // GitHub Issues button
+                        Button(action: {
+                            feedbackManager.openGitHubIssues()
+                        }) {
+                            HStack {
+                                Image(systemName: "link")
+                                Text("Or report on GitHub Issues")
+                            }
+                            .font(.caption)
+                        }
+                        .buttonStyle(.plain)
+                        .foregroundColor(.blue)
                     }
                     .padding()
                 }
@@ -177,7 +165,7 @@ struct FeedbackView: View {
 
                 // Actions
                 HStack {
-                    Button("Cancel | إلغاء") {
+                    Button("Cancel") {
                         feedbackManager.reset()
                         isPresented = false
                     }
@@ -194,7 +182,7 @@ struct FeedbackView: View {
                         } else {
                             HStack {
                                 Image(systemName: "paperplane.fill")
-                                Text("Submit | إرسال")
+                                Text("Submit")
                             }
                         }
                     }
@@ -205,7 +193,7 @@ struct FeedbackView: View {
                 .padding()
             }
         }
-        .frame(width: 400, height: 450)
+        .frame(width: 400, height: 420)
         .background(Color(NSColor.windowBackgroundColor))
     }
 }
@@ -219,9 +207,6 @@ struct ReportBugButton: View {
             HStack {
                 Image(systemName: "ladybug.fill")
                 Text("Report Bug")
-                Text("| الإبلاغ عن خطأ")
-                    .font(.caption)
-                    .foregroundColor(.secondary)
             }
         }
         .buttonStyle(.plain)

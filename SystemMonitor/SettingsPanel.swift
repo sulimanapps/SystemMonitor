@@ -219,13 +219,15 @@ struct SettingsPanel: View {
     }
 
     private func openDocumentation() {
-        let path = NSHomeDirectory() + "/Desktop/SystemMonitor/README.md"
-        NSWorkspace.shared.open(URL(fileURLWithPath: path))
+        if let url = URL(string: "https://github.com/sulimanapps/SystemMonitor") {
+            NSWorkspace.shared.open(url)
+        }
     }
 
     private func openFeedback() {
-        let path = NSHomeDirectory() + "/Desktop/SystemMonitor/BUGS.md"
-        NSWorkspace.shared.open(URL(fileURLWithPath: path))
+        if let url = URL(string: "https://github.com/sulimanapps/SystemMonitor/issues/new") {
+            NSWorkspace.shared.open(url)
+        }
     }
 }
 

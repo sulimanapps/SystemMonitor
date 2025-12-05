@@ -7,12 +7,12 @@
 [![macOS](https://img.shields.io/badge/macOS-14.0+-blue?style=for-the-badge&logo=apple)](https://www.apple.com/macos)
 [![Swift](https://img.shields.io/badge/Swift-5.9-orange?style=for-the-badge&logo=swift)](https://swift.org)
 [![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
-[![Stars](https://img.shields.io/github/stars/xsuliman/SystemMonitor?style=for-the-badge)](https://github.com/xsuliman/SystemMonitor/stargazers)
-[![Downloads](https://img.shields.io/github/downloads/xsuliman/SystemMonitor/total?style=for-the-badge)](https://github.com/xsuliman/SystemMonitor/releases)
+[![Stars](https://img.shields.io/github/stars/sulimanapps/SystemMonitor?style=for-the-badge)](https://github.com/sulimanapps/SystemMonitor/stargazers)
+[![Downloads](https://img.shields.io/github/downloads/sulimanapps/SystemMonitor/total?style=for-the-badge)](https://github.com/sulimanapps/SystemMonitor/releases)
 
 **A beautiful, powerful, and FREE alternative to iStat Menus, CleanMyMac, and Stats**
 
-[Download](https://github.com/xsuliman/SystemMonitor/releases) | [Star this repo](https://github.com/xsuliman/SystemMonitor) | [Report Bug](https://github.com/xsuliman/SystemMonitor/issues)
+[Download](https://github.com/sulimanapps/SystemMonitor/releases) | [Star this repo](https://github.com/sulimanapps/SystemMonitor) | [Report Bug](https://github.com/sulimanapps/SystemMonitor/issues)
 
 </div>
 
@@ -73,7 +73,7 @@ Looking for a **free alternative to iStat Menus** or **CleanMyMac**? SystemMonit
 ### Option 1: Download Ready App (Recommended)
 > No Xcode needed - just download and use!
 
-1. Go to [Releases](https://github.com/xsuliman/SystemMonitor/releases)
+1. Go to [Releases](https://github.com/sulimanapps/SystemMonitor/releases)
 2. Download `SystemMonitor-v2.0.0.zip`
 3. Unzip and drag `SystemMonitor.app` to `/Applications`
 4. Done!
@@ -95,7 +95,7 @@ Or: **System Settings > Privacy & Security > Open Anyway**
 - Xcode 15+
 
 ```bash
-git clone https://github.com/xsuliman/SystemMonitor.git
+git clone https://github.com/sulimanapps/SystemMonitor.git
 cd SystemMonitor
 open SystemMonitor.xcodeproj
 ```
@@ -198,7 +198,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 **Suliman **
 Email: xsuliman@gmail.com
-GitHub: [@xsuliman](https://github.com/xsuliman)
+GitHub: [@sulimanapps](https://github.com/sulimanapps)
 
 ---
 
@@ -207,7 +207,7 @@ GitHub: [@xsuliman](https://github.com/xsuliman)
 If you find this project useful, please consider:
 - Giving it a star on GitHub
 - Sharing it with others
-- [Reporting bugs](https://github.com/xsuliman/SystemMonitor/issues) to help improve it
+- [Reporting bugs](https://github.com/sulimanapps/SystemMonitor/issues) to help improve it
 
 ---
 
