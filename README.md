@@ -57,7 +57,14 @@ Looking for a **free alternative to iStat Menus** or **CleanMyMac**? SystemMonit
 
 ## Screenshots
 
-*Dashboard showing real-time metrics, charts, and action buttons*
+### Dashboard
+![Dashboard](screenshots/dashboard.png)
+
+### Uninstall Apps
+![Uninstall Apps](screenshots/uninstall-apps.png)
+
+### Settings
+![Settings](screenshots/settings.png)
 
 ---
 
