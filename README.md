@@ -189,7 +189,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Author
 
-**Suliman Alsulaimani**
+**Suliman **
 Email: xsuliman@gmail.com
 GitHub: [@xsuliman](https://github.com/xsuliman)
 
