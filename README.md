@@ -74,7 +74,7 @@ Looking for a **free alternative to iStat Menus** or **CleanMyMac**? SystemMonit
 > No Xcode needed - just download and use!
 
 1. Go to [Releases](https://github.com/sulimanapps/SystemMonitor/releases)
-2. Download `SystemMonitor-v2.0.0.zip`
+2. Download `SystemMonitor-v2.0.2.zip`
 3. Unzip and drag `SystemMonitor.app` to `/Applications`
 4. Done!
 
