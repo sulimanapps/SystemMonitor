@@ -124,6 +124,20 @@ In Xcode: Select your Team in Signing, then `Cmd + R` to build.
 
 ---
 
+## Keyboard Shortcuts
+
+| Shortcut | Action |
+|----------|--------|
+| `Cmd + Q` | Quit Application |
+| `Cmd + ,` | Open Settings |
+| `Cmd + R` | Refresh System Data |
+| `Cmd + 1` | Show Dashboard |
+| `Cmd + 2` | Show Apps List |
+| `Cmd + 3` | Show Large Files |
+| `Cmd + W` | Close Window |
+
+---
+
 ## Comparison
 
 | Feature | SystemMonitor Pro | iStat Menus | CleanMyMac |
@@ -173,6 +187,55 @@ SystemMonitor/
 - Confirmation dialogs before any destructive action
 - Running app detection with warnings
 - **Zero data collection** - Everything stays on your Mac
+
+---
+
+## Troubleshooting
+
+### App won't open - "damaged" or "unidentified developer"
+```bash
+# Run this in Terminal:
+xattr -cr /Applications/SystemMonitor.app
+```
+Then right-click > Open > Open
+
+### Temperature shows 0 or N/A
+- Some Intel Macs don't expose temperature sensors
+- Apple Silicon Macs show CPU temperature only
+
+### High CPU usage
+- Update to v2.0.2 or later (fixed in this version)
+- Try increasing refresh interval in Settings (5-10 seconds)
+
+### App doesn't appear in menu bar
+- Check if menu bar is full - drag some icons out
+- Try relaunching the app
+
+### Cache size shows 0 KB
+- Run the app with Full Disk Access enabled
+- System Settings > Privacy & Security > Full Disk Access > Add SystemMonitor
+
+---
+
+## Roadmap
+
+### v2.1 (Coming Soon)
+- [ ] GPU usage monitoring
+- [ ] Fan speed control
+- [ ] Custom menu bar display options
+- [ ] Notification center widgets
+
+### v2.2 (Planned)
+- [ ] Disk health (S.M.A.R.T.)
+- [ ] Process manager (kill apps)
+- [ ] Startup items manager
+- [ ] Export system report
+
+### v3.0 (Future)
+- [ ] iOS companion app
+- [ ] Multiple Mac monitoring
+- [ ] Historical data & charts
+- [ ] Homebrew installation
 
 ---
 
