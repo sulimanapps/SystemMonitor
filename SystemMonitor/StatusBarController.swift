@@ -90,20 +90,26 @@ class StatusBarController: ObservableObject {
 
         timer = Timer.scheduledTimer(withTimeInterval: interval, repeats: true) { [weak self] _ in
             guard let self = self else { return }
-            self.systemMonitor.updateStats()
-            self.featureManager.updateNetworkStats()
-            self.featureManager.updateBatteryInfo()
-            self.featureManager.updateTemperatures()
 
-            // Check for alerts
-            self.featureManager.checkForAlerts(
-                cpuUsage: self.systemMonitor.cpuUsage,
-                memoryUsage: self.systemMonitor.memoryUsage,
-                diskUsage: self.systemMonitor.diskUsage
-            )
+            // Run heavy operations on background thread
+            DispatchQueue.global(qos: .utility).async { [weak self] in
+                guard let self = self else { return }
 
-            DispatchQueue.main.async {
-                self.updateStatusIcon()
+                self.systemMonitor.updateStats()
+                self.featureManager.updateNetworkStats()
+                self.featureManager.updateBatteryInfo()
+                self.featureManager.updateTemperatures()
+
+                // Check for alerts
+                self.featureManager.checkForAlerts(
+                    cpuUsage: self.systemMonitor.cpuUsage,
+                    memoryUsage: self.systemMonitor.memoryUsage,
+                    diskUsage: self.systemMonitor.diskUsage
+                )
+
+                DispatchQueue.main.async { [weak self] in
+                    self?.updateStatusIcon()
+                }
             }
         }
         timer?.fire()

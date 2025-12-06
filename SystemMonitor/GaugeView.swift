@@ -63,14 +63,10 @@ struct CircularGauge: View {
         }
         .frame(width: size, height: size)
         .onChange(of: value) { _, newValue in
-            withAnimation(Theme.Animation.normal) {
-                animatedValue = newValue
-            }
+            animatedValue = newValue
         }
         .onAppear {
-            withAnimation(Theme.Animation.slow) {
-                animatedValue = value
-            }
+            animatedValue = value
         }
     }
 }
@@ -140,14 +136,10 @@ struct ArcGauge: View {
                 .foregroundColor(Theme.Colors.textSecondary)
         }
         .onChange(of: value) { _, newValue in
-            withAnimation(Theme.Animation.normal) {
-                animatedValue = newValue
-            }
+            animatedValue = newValue
         }
         .onAppear {
-            withAnimation(Theme.Animation.slow) {
-                animatedValue = value
-            }
+            animatedValue = value
         }
     }
 }
@@ -226,14 +218,10 @@ struct ProgressBar: View {
             }
         }
         .onChange(of: value) { _, newValue in
-            withAnimation(Theme.Animation.normal) {
-                animatedValue = newValue
-            }
+            animatedValue = newValue
         }
         .onAppear {
-            withAnimation(Theme.Animation.slow) {
-                animatedValue = value
-            }
+            animatedValue = value
         }
     }
 }

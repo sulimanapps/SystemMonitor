@@ -283,15 +283,12 @@ class FeatureManager: ObservableObject {
     }
 
     private func calculateMD5(path: String) -> String? {
-        guard let data = FileManager.default.contents(atPath: path) else { return nil }
+        // Read only first 1MB to avoid loading large files into memory
+        guard let fileHandle = FileHandle(forReadingAtPath: path) else { return nil }
+        defer { try? fileHandle.close() }
 
-        // For large files, only hash first 1MB
-        let dataToHash: Data
-        if data.count > 1_048_576 {
-            dataToHash = data.prefix(1_048_576)
-        } else {
-            dataToHash = data
-        }
+        let dataToHash = fileHandle.readData(ofLength: 1_048_576)
+        guard !dataToHash.isEmpty else { return nil }
 
         let hash = Insecure.MD5.hash(data: dataToHash)
         return hash.map { String(format: "%02hhx", $0) }.joined()
@@ -509,7 +506,21 @@ class FeatureManager: ObservableObject {
 
             do {
                 try task.run()
-                task.waitUntilExit()
+
+                // Timeout to prevent hanging
+                let semaphore = DispatchSemaphore(value: 0)
+                DispatchQueue.global().async {
+                    task.waitUntilExit()
+                    semaphore.signal()
+                }
+
+                if semaphore.wait(timeout: .now() + .milliseconds(500)) == .timedOut {
+                    task.terminate()
+                    DispatchQueue.main.async {
+                        self?.isLoadingProcesses = false
+                    }
+                    return
+                }
 
                 let data = pipe.fileHandleForReading.readDataToEndOfFile()
                 if let output = String(data: data, encoding: .utf8) {
@@ -655,7 +666,18 @@ class FeatureManager: ObservableObject {
 
         do {
             try task.run()
-            task.waitUntilExit()
+
+            // Timeout to prevent hanging
+            let semaphore = DispatchSemaphore(value: 0)
+            DispatchQueue.global().async {
+                task.waitUntilExit()
+                semaphore.signal()
+            }
+
+            if semaphore.wait(timeout: .now() + .milliseconds(500)) == .timedOut {
+                task.terminate()
+                return
+            }
 
             let data = pipe.fileHandleForReading.readDataToEndOfFile()
             if let output = String(data: data, encoding: .utf8) {
@@ -741,7 +763,20 @@ class FeatureManager: ObservableObject {
 
         do {
             try task.run()
-            task.waitUntilExit()
+
+            // Timeout to prevent hanging
+            let semaphore = DispatchSemaphore(value: 0)
+            DispatchQueue.global().async {
+                task.waitUntilExit()
+                semaphore.signal()
+            }
+
+            if semaphore.wait(timeout: .now() + .milliseconds(500)) == .timedOut {
+                task.terminate()
+                cpuTemperature = 50
+                gpuTemperature = 45
+                return
+            }
 
             let data = pipe.fileHandleForReading.readDataToEndOfFile()
             if let output = String(data: data, encoding: .utf8) {
@@ -788,6 +823,20 @@ class FeatureManager: ObservableObject {
         lastRAMCleanResult = ""
 
         DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+            // Helper function to run process with timeout
+            func runProcessWithTimeout(_ task: Process, timeout: DispatchTimeInterval = .seconds(5)) -> Bool {
+                let semaphore = DispatchSemaphore(value: 0)
+                DispatchQueue.global().async {
+                    task.waitUntilExit()
+                    semaphore.signal()
+                }
+                if semaphore.wait(timeout: .now() + timeout) == .timedOut {
+                    task.terminate()
+                    return false
+                }
+                return true
+            }
+
             // Get memory before cleaning
             let beforeTask = Process()
             beforeTask.launchPath = "/usr/bin/vm_stat"
@@ -799,10 +848,11 @@ class FeatureManager: ObservableObject {
 
             do {
                 try beforeTask.run()
-                beforeTask.waitUntilExit()
-                let data = beforePipe.fileHandleForReading.readDataToEndOfFile()
-                if let output = String(data: data, encoding: .utf8) {
-                    freePagesBefore = self?.parseFreePages(output) ?? 0
+                if runProcessWithTimeout(beforeTask, timeout: .milliseconds(500)) {
+                    let data = beforePipe.fileHandleForReading.readDataToEndOfFile()
+                    if let output = String(data: data, encoding: .utf8) {
+                        freePagesBefore = self?.parseFreePages(output) ?? 0
+                    }
                 }
             } catch {}
 
@@ -817,13 +867,13 @@ class FeatureManager: ObservableObject {
 
             do {
                 try task.run()
-                task.waitUntilExit()
+                _ = runProcessWithTimeout(task, timeout: .seconds(10))
 
                 // Also purge disk caches
                 let purgeTask = Process()
                 purgeTask.launchPath = "/usr/sbin/purge"
                 try? purgeTask.run()
-                purgeTask.waitUntilExit()
+                _ = runProcessWithTimeout(purgeTask, timeout: .seconds(5))
 
                 // Get memory after cleaning
                 let afterTask = Process()
@@ -833,21 +883,28 @@ class FeatureManager: ObservableObject {
                 afterTask.standardError = FileHandle.nullDevice
 
                 try afterTask.run()
-                afterTask.waitUntilExit()
-                let afterData = afterPipe.fileHandleForReading.readDataToEndOfFile()
-                if let afterOutput = String(data: afterData, encoding: .utf8) {
-                    let freePagesAfter = self?.parseFreePages(afterOutput) ?? 0
-                    let freedPages = freePagesAfter > freePagesBefore ? freePagesAfter - freePagesBefore : 0
-                    let freedBytes = freedPages * 4096 // Page size is 4KB
+                if runProcessWithTimeout(afterTask, timeout: .milliseconds(500)) {
+                    let afterData = afterPipe.fileHandleForReading.readDataToEndOfFile()
+                    if let afterOutput = String(data: afterData, encoding: .utf8) {
+                        let freePagesAfter = self?.parseFreePages(afterOutput) ?? 0
+                        let freedPages = freePagesAfter > freePagesBefore ? freePagesAfter - freePagesBefore : 0
+                        let freedBytes = freedPages * 4096 // Page size is 4KB
 
-                    DispatchQueue.main.async {
-                        if freedBytes > 0 {
-                            self?.lastRAMCleanResult = "Freed \(FeatureManager.formatBytes(freedBytes))"
-                        } else {
-                            self?.lastRAMCleanResult = "Memory optimized"
+                        DispatchQueue.main.async {
+                            if freedBytes > 0 {
+                                self?.lastRAMCleanResult = "Freed \(FeatureManager.formatBytes(freedBytes))"
+                            } else {
+                                self?.lastRAMCleanResult = "Memory optimized"
+                            }
+                            self?.isCleaningRAM = false
                         }
-                        self?.isCleaningRAM = false
+                        return
                     }
+                }
+
+                DispatchQueue.main.async {
+                    self?.lastRAMCleanResult = "Memory optimized"
+                    self?.isCleaningRAM = false
                 }
             } catch {
                 DispatchQueue.main.async {

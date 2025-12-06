@@ -139,18 +139,26 @@ extension DashboardWindowController: NSWindowDelegate {
 // MARK: - Keyboard Event Handler
 class DashboardKeyHandler: NSObject {
     private weak var windowController: DashboardWindowController?
+    private var eventMonitor: Any?
 
     init(windowController: DashboardWindowController) {
         self.windowController = windowController
         super.init()
 
         // Add global escape key handler
-        NSEvent.addLocalMonitorForEvents(matching: .keyDown) { [weak self] event in
+        eventMonitor = NSEvent.addLocalMonitorForEvents(matching: .keyDown) { [weak self] event in
             if event.keyCode == 53 { // Escape key
                 self?.windowController?.closeWindow()
                 return nil
             }
             return event
+        }
+    }
+
+    deinit {
+        // Remove event monitor to prevent memory leak
+        if let monitor = eventMonitor {
+            NSEvent.removeMonitor(monitor)
         }
     }
 }

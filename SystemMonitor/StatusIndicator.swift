@@ -53,26 +53,10 @@ struct StatusDot: View {
                 .shadow(color: status.color.opacity(0.6), radius: 4, x: 0, y: 0)
         }
         .onAppear {
-            if status.shouldPulse {
-                withAnimation(
-                    Animation.easeInOut(duration: 1.2)
-                        .repeatForever(autoreverses: true)
-                ) {
-                    isPulsing = true
-                }
-            }
+            isPulsing = status.shouldPulse
         }
         .onChange(of: status) { _, newStatus in
-            if newStatus.shouldPulse {
-                withAnimation(
-                    Animation.easeInOut(duration: 1.2)
-                        .repeatForever(autoreverses: true)
-                ) {
-                    isPulsing = true
-                }
-            } else {
-                isPulsing = false
-            }
+            isPulsing = newStatus.shouldPulse
         }
     }
 }
@@ -204,12 +188,7 @@ struct LiveIndicator: View {
         .background(Theme.Colors.critical.opacity(0.1))
         .cornerRadius(Theme.Radius.small)
         .onAppear {
-            withAnimation(
-                Animation.easeInOut(duration: 0.8)
-                    .repeatForever(autoreverses: true)
-            ) {
-                isAnimating = true
-            }
+            isAnimating = true
         }
     }
 }

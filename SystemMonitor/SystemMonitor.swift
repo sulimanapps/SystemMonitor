@@ -129,6 +129,7 @@ class SystemMonitor: ObservableObject {
     }
 
     private func getTopProcesses() -> [AppProcessInfo] {
+        // Use a simpler approach that doesn't block
         var processes: [AppProcessInfo] = []
 
         let task = Process()
@@ -141,14 +142,29 @@ class SystemMonitor: ObservableObject {
 
         do {
             try task.run()
-            task.waitUntilExit()
+
+            // Set a timeout to prevent hanging
+            let deadline = DispatchTime.now() + .milliseconds(500)
+            let semaphore = DispatchSemaphore(value: 0)
+
+            DispatchQueue.global(qos: .utility).async {
+                task.waitUntilExit()
+                semaphore.signal()
+            }
+
+            let result = semaphore.wait(timeout: deadline)
+
+            if result == .timedOut {
+                task.terminate()
+                return processes
+            }
 
             let data = pipe.fileHandleForReading.readDataToEndOfFile()
             if let output = String(data: data, encoding: .utf8) {
                 let lines = output.components(separatedBy: "\n").dropFirst()
                 var tempProcesses: [(name: String, memory: UInt64, pid: Int32)] = []
 
-                for line in lines {
+                for line in lines.prefix(100) { // Limit to first 100 lines
                     let components = line.trimmingCharacters(in: .whitespaces)
                         .components(separatedBy: .whitespaces)
                         .filter { !$0.isEmpty }

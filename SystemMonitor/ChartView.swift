@@ -151,15 +151,7 @@ struct ChartLine: View {
             }
         }
         .onAppear {
-            withAnimation(.easeInOut(duration: 0.8)) {
-                animationProgress = 1.0
-            }
-        }
-        .onChange(of: data) { _, _ in
-            animationProgress = 0
-            withAnimation(.easeInOut(duration: 0.3)) {
-                animationProgress = 1.0
-            }
+            animationProgress = 1.0
         }
     }
 }
@@ -311,9 +303,7 @@ struct AreaChart: View {
             }
         }
         .onAppear {
-            withAnimation(.easeInOut(duration: 0.8)) {
-                animationProgress = 1.0
-            }
+            animationProgress = 1.0
         }
     }
 }
@@ -411,9 +401,7 @@ struct NetworkChart: View {
             }
         }
         .onAppear {
-            withAnimation(.easeInOut(duration: 0.8)) {
-                animationProgress = 1.0
-            }
+            animationProgress = 1.0
         }
     }
 
@@ -549,9 +537,7 @@ struct DiskDonutChart: View {
         }
         .frame(width: size, height: size)
         .onAppear {
-            withAnimation(.easeInOut(duration: 0.8)) {
-                animationProgress = 1.0
-            }
+            animationProgress = 1.0
         }
     }
 

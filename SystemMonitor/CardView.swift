@@ -331,14 +331,10 @@ struct AnimatedNumber: View {
             .foregroundColor(color)
             .contentTransition(.numericText())
             .onChange(of: value) { _, newValue in
-                withAnimation(Theme.Animation.normal) {
-                    displayValue = newValue
-                }
+                displayValue = newValue
             }
             .onAppear {
-                withAnimation(Theme.Animation.normal) {
-                    displayValue = value
-                }
+                displayValue = value
             }
     }
 }
