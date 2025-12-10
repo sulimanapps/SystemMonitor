@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Questions & Discussions
+    url: https://github.com/sulimanapps/SystemMonitor/discussions
+    about: Ask questions and discuss features
+  - name: Star the Repository
+    url: https://github.com/sulimanapps/SystemMonitor
+    about: If you find this useful, please star the repo!

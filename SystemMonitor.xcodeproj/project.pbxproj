@@ -1,0 +1,456 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		120ED7569CFF1DD0CD227BDF /* StartupManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADE613D4ED7BB63E952D553F /* StartupManager.swift */; };
+		3B4B584B48C2A9723BD1B89A /* ProcessManagerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0F58F75B203CABCE98F9797 /* ProcessManagerView.swift */; };
+		4CE0271510A9CE33EBB6EE87 /* StartupManagerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28C702799D142F58243930F1 /* StartupManagerView.swift */; };
+		6213014D84EB8969B525769F /* DiskHealthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A5C91B107E27E27C7F50537 /* DiskHealthManager.swift */; };
+		6F10FB94EC7AF530073D771D /* SmartCleanView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C2F80C08C47F5717847B653 /* SmartCleanView.swift */; };
+		74531DB07470B2594331DCBB /* HardwareIntegrityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE9852E9BF482866189D61EF /* HardwareIntegrityView.swift */; };
+		74F429B7052FF82B7016D700 /* DiskHealthView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455785339B36BFF9BFF8790E /* DiskHealthView.swift */; };
+		9CF649811C64A308C49D8910 /* ProcessManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5977670BB2922344F47CA64 /* ProcessManager.swift */; };
+		A1000001230D5C0000000001 /* SystemMonitorApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000001230D5C0000000011 /* SystemMonitorApp.swift */; };
+		A1000001230D5C0000000002 /* StatusBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000001230D5C0000000012 /* StatusBarController.swift */; };
+		A1000001230D5C0000000003 /* SystemMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000001230D5C0000000013 /* SystemMonitor.swift */; };
+		A1000001230D5C0000000004 /* StatusMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000001230D5C0000000014 /* StatusMenuView.swift */; };
+		A1000001230D5C0000000005 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A1000001230D5C0000000015 /* Assets.xcassets */; };
+		A1000001230D5C0000000006 /* CacheManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000001230D5C0000000018 /* CacheManager.swift */; };
+		A1000001230D5C0000000007 /* CacheCleanupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000001230D5C0000000019 /* CacheCleanupView.swift */; };
+		A1000001230D5C000000000A /* FeatureManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000001230D5C000000001A /* FeatureManager.swift */; };
+		A1000001230D5C000000000B /* FeatureViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000001230D5C000000001B /* FeatureViews.swift */; };
+		A1000001230D5C000000000C /* FeedbackManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000001230D5C000000001C /* FeedbackManager.swift */; };
+		A1000001230D5C000000000D /* FeedbackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000001230D5C000000001D /* FeedbackView.swift */; };
+		A1000001230D5C0000000101 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000001230D5C0000000111 /* Theme.swift */; };
+		A1000001230D5C0000000102 /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000001230D5C0000000112 /* CardView.swift */; };
+		A1000001230D5C0000000103 /* GaugeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000001230D5C0000000113 /* GaugeView.swift */; };
+		A1000001230D5C0000000104 /* StatusIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000001230D5C0000000114 /* StatusIndicator.swift */; };
+		A1000001230D5C0000000105 /* ChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000001230D5C0000000115 /* ChartView.swift */; };
+		A1000001230D5C0000000106 /* SettingsPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000001230D5C0000000116 /* SettingsPanel.swift */; };
+		A1000001230D5C0000000107 /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000001230D5C0000000117 /* DashboardView.swift */; };
+		A1000001230D5C0000000108 /* DashboardWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000001230D5C0000000118 /* DashboardWindow.swift */; };
+		C6D056AFD7871C21F3C3E735 /* SystemReportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8644D94F4F53CDB2E73677F7 /* SystemReportView.swift */; };
+		D8327CE1549DB08DC7252BD9 /* HardwareIntegrityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D1EBEBAAA31B049DB6B3299 /* HardwareIntegrityManager.swift */; };
+		DE3BCBAC475534B75736AE8E /* AppUninstallView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66ED05E58773910786A84A65 /* AppUninstallView.swift */; };
+		E6656255802A4A5EC2D43A04 /* SmartCleanManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB4FD6B87D0A4171FC11EC0B /* SmartCleanManager.swift */; };
+		EA475BE720DF6A01CE0F3E30 /* AppManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9603F6EFA873FB9EAA42A732 /* AppManager.swift */; };
+		EEBD07E24C8081AE1EC97484 /* SystemReportManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BDA79DE6451B2A412544E30 /* SystemReportManager.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		0D1EBEBAAA31B049DB6B3299 /* HardwareIntegrityManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HardwareIntegrityManager.swift; sourceTree = "<group>"; };
+		28C702799D142F58243930F1 /* StartupManagerView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = StartupManagerView.swift; sourceTree = "<group>"; };
+		2BDA79DE6451B2A412544E30 /* SystemReportManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SystemReportManager.swift; sourceTree = "<group>"; };
+		455785339B36BFF9BFF8790E /* DiskHealthView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DiskHealthView.swift; sourceTree = "<group>"; };
+		5C2F80C08C47F5717847B653 /* SmartCleanView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SmartCleanView.swift; sourceTree = "<group>"; };
+		66ED05E58773910786A84A65 /* AppUninstallView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AppUninstallView.swift; sourceTree = "<group>"; };
+		7A5C91B107E27E27C7F50537 /* DiskHealthManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DiskHealthManager.swift; sourceTree = "<group>"; };
+		8644D94F4F53CDB2E73677F7 /* SystemReportView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SystemReportView.swift; sourceTree = "<group>"; };
+		9603F6EFA873FB9EAA42A732 /* AppManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AppManager.swift; sourceTree = "<group>"; };
+		A1000001230D5C0000000010 /* SystemMonitor.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SystemMonitor.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A1000001230D5C0000000011 /* SystemMonitorApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemMonitorApp.swift; sourceTree = "<group>"; };
+		A1000001230D5C0000000012 /* StatusBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusBarController.swift; sourceTree = "<group>"; };
+		A1000001230D5C0000000013 /* SystemMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemMonitor.swift; sourceTree = "<group>"; };
+		A1000001230D5C0000000014 /* StatusMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusMenuView.swift; sourceTree = "<group>"; };
+		A1000001230D5C0000000015 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		A1000001230D5C0000000016 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A1000001230D5C0000000017 /* SystemMonitor.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SystemMonitor.entitlements; sourceTree = "<group>"; };
+		A1000001230D5C0000000018 /* CacheManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheManager.swift; sourceTree = "<group>"; };
+		A1000001230D5C0000000019 /* CacheCleanupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheCleanupView.swift; sourceTree = "<group>"; };
+		A1000001230D5C000000001A /* FeatureManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeatureManager.swift; sourceTree = "<group>"; };
+		A1000001230D5C000000001B /* FeatureViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeatureViews.swift; sourceTree = "<group>"; };
+		A1000001230D5C000000001C /* FeedbackManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackManager.swift; sourceTree = "<group>"; };
+		A1000001230D5C000000001D /* FeedbackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackView.swift; sourceTree = "<group>"; };
+		A1000001230D5C0000000111 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
+		A1000001230D5C0000000112 /* CardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
+		A1000001230D5C0000000113 /* GaugeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GaugeView.swift; sourceTree = "<group>"; };
+		A1000001230D5C0000000114 /* StatusIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusIndicator.swift; sourceTree = "<group>"; };
+		A1000001230D5C0000000115 /* ChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartView.swift; sourceTree = "<group>"; };
+		A1000001230D5C0000000116 /* SettingsPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsPanel.swift; sourceTree = "<group>"; };
+		A1000001230D5C0000000117 /* DashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardView.swift; sourceTree = "<group>"; };
+		A1000001230D5C0000000118 /* DashboardWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardWindow.swift; sourceTree = "<group>"; };
+		ADE613D4ED7BB63E952D553F /* StartupManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = StartupManager.swift; sourceTree = "<group>"; };
+		C5977670BB2922344F47CA64 /* ProcessManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ProcessManager.swift; sourceTree = "<group>"; };
+		F0F58F75B203CABCE98F9797 /* ProcessManagerView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ProcessManagerView.swift; sourceTree = "<group>"; };
+		FB4FD6B87D0A4171FC11EC0B /* SmartCleanManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SmartCleanManager.swift; sourceTree = "<group>"; };
+		FE9852E9BF482866189D61EF /* HardwareIntegrityView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HardwareIntegrityView.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		A1000001230D5C0000000020 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		A1000001230D5C0000000030 = {
+			isa = PBXGroup;
+			children = (
+				A1000001230D5C0000000031 /* SystemMonitor */,
+				A1000001230D5C0000000032 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		A1000001230D5C0000000031 /* SystemMonitor */ = {
+			isa = PBXGroup;
+			children = (
+				A1000001230D5C0000000011 /* SystemMonitorApp.swift */,
+				A1000001230D5C0000000012 /* StatusBarController.swift */,
+				A1000001230D5C0000000013 /* SystemMonitor.swift */,
+				A1000001230D5C0000000014 /* StatusMenuView.swift */,
+				A1000001230D5C0000000018 /* CacheManager.swift */,
+				A1000001230D5C0000000019 /* CacheCleanupView.swift */,
+				A1000001230D5C000000001A /* FeatureManager.swift */,
+				A1000001230D5C000000001B /* FeatureViews.swift */,
+				A1000001230D5C000000001C /* FeedbackManager.swift */,
+				A1000001230D5C000000001D /* FeedbackView.swift */,
+				A1000001230D5C0000000111 /* Theme.swift */,
+				A1000001230D5C0000000112 /* CardView.swift */,
+				A1000001230D5C0000000113 /* GaugeView.swift */,
+				A1000001230D5C0000000114 /* StatusIndicator.swift */,
+				A1000001230D5C0000000115 /* ChartView.swift */,
+				A1000001230D5C0000000116 /* SettingsPanel.swift */,
+				A1000001230D5C0000000117 /* DashboardView.swift */,
+				A1000001230D5C0000000118 /* DashboardWindow.swift */,
+				A1000001230D5C0000000015 /* Assets.xcassets */,
+				A1000001230D5C0000000016 /* Info.plist */,
+				A1000001230D5C0000000017 /* SystemMonitor.entitlements */,
+				9603F6EFA873FB9EAA42A732 /* AppManager.swift */,
+				66ED05E58773910786A84A65 /* AppUninstallView.swift */,
+				FB4FD6B87D0A4171FC11EC0B /* SmartCleanManager.swift */,
+				5C2F80C08C47F5717847B653 /* SmartCleanView.swift */,
+				7A5C91B107E27E27C7F50537 /* DiskHealthManager.swift */,
+				455785339B36BFF9BFF8790E /* DiskHealthView.swift */,
+				C5977670BB2922344F47CA64 /* ProcessManager.swift */,
+				F0F58F75B203CABCE98F9797 /* ProcessManagerView.swift */,
+				ADE613D4ED7BB63E952D553F /* StartupManager.swift */,
+				28C702799D142F58243930F1 /* StartupManagerView.swift */,
+				2BDA79DE6451B2A412544E30 /* SystemReportManager.swift */,
+				8644D94F4F53CDB2E73677F7 /* SystemReportView.swift */,
+				0D1EBEBAAA31B049DB6B3299 /* HardwareIntegrityManager.swift */,
+				FE9852E9BF482866189D61EF /* HardwareIntegrityView.swift */,
+			);
+			path = SystemMonitor;
+			sourceTree = "<group>";
+		};
+		A1000001230D5C0000000032 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				A1000001230D5C0000000010 /* SystemMonitor.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		A1000001230D5C0000000040 /* SystemMonitor */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A1000001230D5C0000000060 /* Build configuration list for PBXNativeTarget "SystemMonitor" */;
+			buildPhases = (
+				A1000001230D5C0000000041 /* Sources */,
+				A1000001230D5C0000000020 /* Frameworks */,
+				A1000001230D5C0000000042 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = SystemMonitor;
+			productName = SystemMonitor;
+			productReference = A1000001230D5C0000000010 /* SystemMonitor.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		A1000001230D5C0000000050 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1500;
+				LastUpgradeCheck = 1500;
+				TargetAttributes = {
+					A1000001230D5C0000000040 = {
+						CreatedOnToolsVersion = 15.0;
+					};
+				};
+			};
+			buildConfigurationList = A1000001230D5C0000000051 /* Build configuration list for PBXProject "SystemMonitor" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = A1000001230D5C0000000030;
+			productRefGroup = A1000001230D5C0000000032 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				A1000001230D5C0000000040 /* SystemMonitor */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		A1000001230D5C0000000042 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A1000001230D5C0000000005 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		A1000001230D5C0000000041 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A1000001230D5C0000000001 /* SystemMonitorApp.swift in Sources */,
+				A1000001230D5C0000000002 /* StatusBarController.swift in Sources */,
+				A1000001230D5C0000000003 /* SystemMonitor.swift in Sources */,
+				A1000001230D5C0000000004 /* StatusMenuView.swift in Sources */,
+				A1000001230D5C0000000006 /* CacheManager.swift in Sources */,
+				A1000001230D5C0000000007 /* CacheCleanupView.swift in Sources */,
+				A1000001230D5C000000000A /* FeatureManager.swift in Sources */,
+				A1000001230D5C000000000B /* FeatureViews.swift in Sources */,
+				A1000001230D5C000000000C /* FeedbackManager.swift in Sources */,
+				A1000001230D5C000000000D /* FeedbackView.swift in Sources */,
+				A1000001230D5C0000000101 /* Theme.swift in Sources */,
+				A1000001230D5C0000000102 /* CardView.swift in Sources */,
+				A1000001230D5C0000000103 /* GaugeView.swift in Sources */,
+				A1000001230D5C0000000104 /* StatusIndicator.swift in Sources */,
+				A1000001230D5C0000000105 /* ChartView.swift in Sources */,
+				A1000001230D5C0000000106 /* SettingsPanel.swift in Sources */,
+				A1000001230D5C0000000107 /* DashboardView.swift in Sources */,
+				A1000001230D5C0000000108 /* DashboardWindow.swift in Sources */,
+				EA475BE720DF6A01CE0F3E30 /* AppManager.swift in Sources */,
+				DE3BCBAC475534B75736AE8E /* AppUninstallView.swift in Sources */,
+				E6656255802A4A5EC2D43A04 /* SmartCleanManager.swift in Sources */,
+				6F10FB94EC7AF530073D771D /* SmartCleanView.swift in Sources */,
+				6213014D84EB8969B525769F /* DiskHealthManager.swift in Sources */,
+				74F429B7052FF82B7016D700 /* DiskHealthView.swift in Sources */,
+				9CF649811C64A308C49D8910 /* ProcessManager.swift in Sources */,
+				3B4B584B48C2A9723BD1B89A /* ProcessManagerView.swift in Sources */,
+				120ED7569CFF1DD0CD227BDF /* StartupManager.swift in Sources */,
+				4CE0271510A9CE33EBB6EE87 /* StartupManagerView.swift in Sources */,
+				EEBD07E24C8081AE1EC97484 /* SystemReportManager.swift in Sources */,
+				C6D056AFD7871C21F3C3E735 /* SystemReportView.swift in Sources */,
+				D8327CE1549DB08DC7252BD9 /* HardwareIntegrityManager.swift in Sources */,
+				74531DB07470B2594331DCBB /* HardwareIntegrityView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		A1000001230D5C0000000070 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		A1000001230D5C0000000071 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+			};
+			name = Release;
+		};
+		A1000001230D5C0000000072 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = SystemMonitor/SystemMonitor.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = SystemMonitor/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright 2024. All rights reserved.";
+				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.local.SystemMonitor;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		A1000001230D5C0000000073 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = SystemMonitor/SystemMonitor.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = SystemMonitor/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright 2024. All rights reserved.";
+				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.local.SystemMonitor;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		A1000001230D5C0000000051 /* Build configuration list for PBXProject "SystemMonitor" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A1000001230D5C0000000070 /* Debug */,
+				A1000001230D5C0000000071 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A1000001230D5C0000000060 /* Build configuration list for PBXNativeTarget "SystemMonitor" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A1000001230D5C0000000072 /* Debug */,
+				A1000001230D5C0000000073 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = A1000001230D5C0000000050 /* Project object */;
+}
