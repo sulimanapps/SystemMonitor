@@ -47,7 +47,7 @@ struct StartupManagerView: View {
                 }
                 .pickerStyle(.segmented)
                 .labelsHidden()
-                .frame(width: 280)
+                .frame(maxWidth: 320)
 
                 Spacer()
 
@@ -141,7 +141,7 @@ struct StartupManagerView: View {
             }
             .padding()
         }
-        .frame(width: 550, height: 450)
+        .frame(minWidth: 400, idealWidth: 550, maxWidth: .infinity, minHeight: 350, idealHeight: 450, maxHeight: .infinity)
         .onAppear {
             startupManager.loadStartupItems()
         }

@@ -193,7 +193,7 @@ struct FeedbackView: View {
                 .padding()
             }
         }
-        .frame(width: 400, height: 420)
+        .frame(minWidth: 320, idealWidth: 400, maxWidth: 500, minHeight: 350, idealHeight: 420, maxHeight: .infinity)
         .background(Color(NSColor.windowBackgroundColor))
     }
 }

@@ -72,7 +72,7 @@ struct AppUninstallView: View {
                 leftoverTabContent
             }
         }
-        .frame(width: 600, height: 650)
+        .frame(minWidth: 450, idealWidth: 600, maxWidth: .infinity, minHeight: 400, idealHeight: 650, maxHeight: .infinity)
         .background(Color(NSColor.windowBackgroundColor))
         .alert("Uninstall Apps?", isPresented: $showConfirmation) {
             Button("Cancel", role: .cancel) { }

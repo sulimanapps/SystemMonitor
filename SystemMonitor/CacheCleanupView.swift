@@ -299,7 +299,7 @@ struct CacheCleanupView: View {
                 }
             }
         }
-        .frame(width: 380, height: 480)
+        .frame(minWidth: 320, idealWidth: 380, maxWidth: 500, minHeight: 350, idealHeight: 480, maxHeight: .infinity)
         .background(Color(NSColor.windowBackgroundColor))
         .alert("Clean Cache?", isPresented: $showConfirmation) {
             Button("Cancel", role: .cancel) { }

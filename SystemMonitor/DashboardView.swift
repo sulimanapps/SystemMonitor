@@ -46,51 +46,62 @@ struct DashboardView: View {
                     .transition(.move(edge: .top).combined(with: .opacity))
                 }
 
-                // Main Content - Simple 3-column layout (NO GeometryReader, NO ScrollView)
-                HStack(alignment: .top, spacing: Theme.Spacing.md) {
-                    // Left Column - System Health
-                    VStack(spacing: Theme.Spacing.md) {
-                        CPUCard(
-                            usage: systemMonitor.cpuUsage,
-                            history: systemMonitor.cpuHistory
-                        )
+                // Main Content - Responsive 3-column layout
+                ScrollView {
+                    GeometryReader { geo in
+                        let totalWidth = geo.size.width
+                        let spacing = Theme.Spacing.md
+                        let sideColumnWidth = max(200, min(260, totalWidth * 0.28))
+                        let centerWidth = totalWidth - sideColumnWidth * 2 - spacing * 2
 
-                        MemoryCard(
-                            usage: systemMonitor.memoryUsage,
-                            used: systemMonitor.memoryUsed,
-                            total: systemMonitor.memoryTotal
-                        )
+                        HStack(alignment: .top, spacing: spacing) {
+                            // Left Column - System Health
+                            VStack(spacing: Theme.Spacing.md) {
+                                CPUCard(
+                                    usage: systemMonitor.cpuUsage,
+                                    history: systemMonitor.cpuHistory
+                                )
 
-                        DiskCard(
-                            usage: systemMonitor.diskUsage,
-                            used: systemMonitor.diskUsed,
-                            total: systemMonitor.diskTotal
-                        )
+                                MemoryCard(
+                                    usage: systemMonitor.memoryUsage,
+                                    used: systemMonitor.memoryUsed,
+                                    total: systemMonitor.memoryTotal
+                                )
+
+                                DiskCard(
+                                    usage: systemMonitor.diskUsage,
+                                    used: systemMonitor.diskUsed,
+                                    total: systemMonitor.diskTotal
+                                )
+                            }
+                            .frame(width: sideColumnWidth)
+
+                            // Center Column - Charts (flexible width)
+                            VStack(spacing: Theme.Spacing.md) {
+                                PerformanceHistoryCard(
+                                    cpuHistory: featureManager.usageHistory.map { $0.cpuUsage },
+                                    memoryHistory: featureManager.usageHistory.map { $0.memoryUsage }
+                                )
+
+                                NetworkActivityCard(featureManager: featureManager)
+                            }
+                            .frame(width: max(200, centerWidth))
+
+                            // Right Column - Details
+                            VStack(spacing: Theme.Spacing.md) {
+                                BatteryCard(batteryInfo: featureManager.batteryInfo)
+
+                                ThermalCard(
+                                    cpuTemp: featureManager.cpuTemperature,
+                                    gpuTemp: featureManager.gpuTemperature
+                                )
+
+                                TopProcessesCard(featureManager: featureManager)
+                            }
+                            .frame(width: sideColumnWidth)
+                        }
                     }
-                    .frame(width: 260)
-
-                    // Center Column - Charts (flexible width)
-                    VStack(spacing: Theme.Spacing.md) {
-                        PerformanceHistoryCard(
-                            cpuHistory: featureManager.usageHistory.map { $0.cpuUsage },
-                            memoryHistory: featureManager.usageHistory.map { $0.memoryUsage }
-                        )
-
-                        NetworkActivityCard(featureManager: featureManager)
-                    }
-
-                    // Right Column - Details
-                    VStack(spacing: Theme.Spacing.md) {
-                        BatteryCard(batteryInfo: featureManager.batteryInfo)
-
-                        ThermalCard(
-                            cpuTemp: featureManager.cpuTemperature,
-                            gpuTemp: featureManager.gpuTemperature
-                        )
-
-                        TopProcessesCard(featureManager: featureManager)
-                    }
-                    .frame(width: 240)
+                    .frame(minHeight: 400)
                 }
                 .padding(Theme.Spacing.lg)
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -681,6 +692,7 @@ struct ActionBar: View {
     @State private var showHardwareCheck = false
 
     var body: some View {
+        ScrollView(.horizontal, showsIndicators: false) {
         HStack(spacing: Theme.Spacing.md) {
             ActionButton(
                 title: "Smart Clean",
@@ -758,6 +770,7 @@ struct ActionBar: View {
                         .foregroundColor(Theme.Colors.success)
                 }
             }
+        }
         }
         .padding(.horizontal, Theme.Spacing.lg)
         .padding(.vertical, Theme.Spacing.sm)
@@ -981,7 +994,7 @@ struct LargeFilesView: View {
                 }
             }
         }
-        .frame(width: 450, height: 500)
+        .frame(minWidth: 350, idealWidth: 450, maxWidth: .infinity, minHeight: 350, idealHeight: 500, maxHeight: .infinity)
         .background(Color(NSColor.windowBackgroundColor))
         .alert("Delete Files?", isPresented: $showConfirmation) {
             Button("Cancel", role: .cancel) { }
@@ -1325,7 +1338,7 @@ struct RAMCleanerView: View {
             }
             .padding()
         }
-        .frame(width: 340, height: 420)
+        .frame(minWidth: 300, idealWidth: 340, maxWidth: 450, minHeight: 350, idealHeight: 420, maxHeight: .infinity)
     }
 
     private var usedPercentageBefore: Double {

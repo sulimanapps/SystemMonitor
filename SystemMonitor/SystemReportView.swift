@@ -33,7 +33,7 @@ struct SystemReportView: View {
                     VStack(spacing: 16) {
                         ProgressView(value: reportManager.progress)
                             .progressViewStyle(.linear)
-                            .frame(width: 250)
+                            .frame(maxWidth: 280)
 
                         Text(reportManager.currentTask)
                             .font(.caption)
@@ -136,7 +136,7 @@ struct SystemReportView: View {
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
-        .frame(width: 400, height: 450)
+        .frame(minWidth: 320, idealWidth: 400, maxWidth: 550, minHeight: 350, idealHeight: 450, maxHeight: .infinity)
     }
 }
 

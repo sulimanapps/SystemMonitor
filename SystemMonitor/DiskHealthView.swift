@@ -74,7 +74,7 @@ struct DiskHealthView: View {
             }
             .padding()
         }
-        .frame(width: 450, height: 500)
+        .frame(minWidth: 350, idealWidth: 450, maxWidth: .infinity, minHeight: 350, idealHeight: 500, maxHeight: .infinity)
         .onAppear {
             if diskHealthManager.disks.isEmpty {
                 diskHealthManager.scanDisks()

@@ -197,7 +197,7 @@ struct SettingsPanel: View {
             .padding(Theme.Spacing.lg)
             .background(Theme.Colors.headerBackground)
         }
-        .frame(width: 360)
+        .frame(minWidth: 300, idealWidth: 360, maxWidth: 400)
         .background(Theme.Colors.cardBackground)
     }
 

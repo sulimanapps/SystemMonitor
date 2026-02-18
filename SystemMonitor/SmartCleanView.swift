@@ -24,7 +24,7 @@ struct SmartCleanView: View {
                 categoriesListView
             }
         }
-        .frame(width: 500, height: 550)
+        .frame(minWidth: 380, idealWidth: 500, maxWidth: .infinity, minHeight: 400, idealHeight: 550, maxHeight: .infinity)
         .background(Color(NSColor.windowBackgroundColor))
         .onAppear {
             if smartCleanManager.categorySummaries.isEmpty && !smartCleanManager.isScanning {
@@ -103,7 +103,7 @@ struct SmartCleanView: View {
                 .foregroundColor(.secondary)
 
             ProgressView(value: smartCleanManager.scanProgress)
-                .frame(width: 200)
+                .frame(maxWidth: 250)
 
             Text("\(Int(smartCleanManager.scanProgress * 100))%")
                 .font(.caption)
@@ -265,7 +265,7 @@ struct SmartCleanView: View {
                 .padding(.horizontal)
 
             ProgressView(value: smartCleanManager.cleanProgress)
-                .frame(width: 200)
+                .frame(maxWidth: 250)
 
             Text("\(Int(smartCleanManager.cleanProgress * 100))%")
                 .font(.caption)

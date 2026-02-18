@@ -157,7 +157,7 @@ struct ProcessManagerView: View {
             }
             .padding()
         }
-        .frame(width: 600, height: 500)
+        .frame(minWidth: 450, idealWidth: 600, maxWidth: .infinity, minHeight: 350, idealHeight: 500, maxHeight: .infinity)
         .onAppear {
             processManager.loadProcesses()
         }
@@ -200,7 +200,7 @@ struct ProcessRowItem: View {
                     .font(.caption2)
                     .foregroundColor(.secondary)
             }
-            .frame(minWidth: 150, alignment: .leading)
+            .frame(minWidth: 100, maxWidth: .infinity, alignment: .leading)
 
             Spacer()
 

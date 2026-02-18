@@ -218,7 +218,7 @@ struct StatusMenuView: View {
             }
             .padding()
         }
-        .frame(width: 320, height: 600)
+        .frame(width: 320)
     }
 
     private func colorForUsage(_ usage: Double) -> Color {
