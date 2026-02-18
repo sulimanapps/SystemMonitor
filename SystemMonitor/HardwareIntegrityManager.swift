@@ -707,8 +707,8 @@ class HardwareIntegrityManager: ObservableObject {
 
     private func maskUUID(_ uuid: String) -> String {
         let parts = uuid.split(separator: "-")
-        guard parts.count >= 2 else { return uuid }
-        return "••••••••-••••-••••-••••-" + parts.last!
+        guard parts.count >= 2, let lastPart = parts.last else { return uuid }
+        return "••••••••-••••-••••-••••-" + lastPart
     }
 
     private func isValidSerialFormat(_ serial: String) -> Bool {
@@ -771,7 +771,9 @@ class HardwareIntegrityManager: ObservableObject {
         dateFormatter.dateFormat = "yyyy-MM-dd_HH-mm-ss"
         let filename = "HardwareReport_\(dateFormatter.string(from: Date())).txt"
 
-        let desktopPath = FileManager.default.urls(for: .desktopDirectory, in: .userDomainMask).first!
+        guard let desktopPath = FileManager.default.urls(for: .desktopDirectory, in: .userDomainMask).first else {
+            return nil
+        }
         let fileURL = desktopPath.appendingPathComponent(filename)
 
         var content = """

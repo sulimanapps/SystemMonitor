@@ -7,6 +7,7 @@ class SystemReportManager: ObservableObject {
     @Published var currentTask = ""
     @Published var reportGenerated = false
     @Published var lastReportPath: String?
+    private let hostPort: mach_port_t = mach_host_self()
 
     struct SystemReport {
         var systemInfo: [String: String] = [:]
@@ -153,7 +154,7 @@ class SystemReportManager: ObservableObject {
 
         let result = withUnsafeMutablePointer(to: &stats) { pointer in
             pointer.withMemoryRebound(to: integer_t.self, capacity: Int(count)) { pointer in
-                host_statistics64(mach_host_self(), HOST_VM_INFO64, pointer, &count)
+                host_statistics64(hostPort, HOST_VM_INFO64, pointer, &count)
             }
         }
 
@@ -204,9 +205,10 @@ class SystemReportManager: ObservableObject {
 
         do {
             try process.run()
+            // Read data BEFORE waitUntilExit to prevent deadlock
+            let data = pipe.fileHandleForReading.readDataToEndOfFile()
             process.waitUntilExit()
 
-            let data = pipe.fileHandleForReading.readDataToEndOfFile()
             if let output = String(data: data, encoding: .utf8) {
                 if output.contains("InternalBattery") {
                     // Parse battery percentage
@@ -243,9 +245,10 @@ class SystemReportManager: ObservableObject {
 
         do {
             try process.run()
+            // Read data BEFORE waitUntilExit to prevent deadlock
+            let data = pipe.fileHandleForReading.readDataToEndOfFile()
             process.waitUntilExit()
 
-            let data = pipe.fileHandleForReading.readDataToEndOfFile()
             if let output = String(data: data, encoding: .utf8) {
                 // Parse en0 (usually WiFi or Ethernet)
                 if output.contains("en0") {
@@ -325,7 +328,9 @@ class SystemReportManager: ObservableObject {
         dateFormatter.dateFormat = "yyyy-MM-dd_HH-mm-ss"
         let filename = "SystemReport_\(dateFormatter.string(from: report.generatedAt)).txt"
 
-        let desktopPath = FileManager.default.urls(for: .desktopDirectory, in: .userDomainMask).first!
+        guard let desktopPath = FileManager.default.urls(for: .desktopDirectory, in: .userDomainMask).first else {
+            return nil
+        }
         let fileURL = desktopPath.appendingPathComponent(filename)
 
         var content = """
@@ -443,7 +448,7 @@ class SystemReportManager: ObservableObject {
         }
     }
 
-    private func formatBytes(_ bytes: UInt64) -> String {
+    func formatBytes(_ bytes: UInt64) -> String {
         let gb = Double(bytes) / 1_073_741_824
         if gb >= 1 {
             return String(format: "%.2f GB", gb)

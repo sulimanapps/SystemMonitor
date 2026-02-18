@@ -14,6 +14,7 @@ class SystemMonitor: ObservableObject {
     @Published var systemUptime: TimeInterval = 0
 
     private var previousCPUInfo: host_cpu_load_info?
+    private let hostPort: mach_port_t = mach_host_self()
 
     struct AppProcessInfo: Identifiable {
         let id = UUID()
@@ -65,7 +66,7 @@ class SystemMonitor: ObservableObject {
         defer { hostInfo.deallocate() }
 
         let result = hostInfo.withMemoryRebound(to: integer_t.self, capacity: Int(count)) { pointer in
-            host_statistics(mach_host_self(), HOST_CPU_LOAD_INFO, pointer, &count)
+            host_statistics(hostPort, HOST_CPU_LOAD_INFO, pointer, &count)
         }
 
         guard result == KERN_SUCCESS else { return 0 }
@@ -96,7 +97,7 @@ class SystemMonitor: ObservableObject {
 
         let result = withUnsafeMutablePointer(to: &stats) { pointer in
             pointer.withMemoryRebound(to: integer_t.self, capacity: Int(count)) { pointer in
-                host_statistics64(mach_host_self(), HOST_VM_INFO64, pointer, &count)
+                host_statistics64(hostPort, HOST_VM_INFO64, pointer, &count)
             }
         }
 

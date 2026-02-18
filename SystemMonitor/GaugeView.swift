@@ -21,7 +21,7 @@ struct CircularGauge: View {
     }
 
     private var progress: Double {
-        min(animatedValue / maxValue, 1.0)
+        maxValue > 0 ? min(animatedValue / maxValue, 1.0) : 0
     }
 
     private var statusColor: Color {
@@ -92,7 +92,7 @@ struct ArcGauge: View {
     }
 
     private var progress: Double {
-        min(animatedValue / maxValue, 1.0)
+        maxValue > 0 ? min(animatedValue / maxValue, 1.0) : 0
     }
 
     var body: some View {
@@ -185,7 +185,7 @@ struct ProgressBar: View {
     }
 
     private var progress: Double {
-        min(animatedValue / maxValue, 1.0)
+        maxValue > 0 ? min(animatedValue / maxValue, 1.0) : 0
     }
 
     var body: some View {
@@ -243,7 +243,7 @@ struct SegmentedProgressBar: View {
             GeometryReader { geometry in
                 HStack(spacing: 2) {
                     ForEach(Array(segments.enumerated()), id: \.offset) { index, segment in
-                        let width = (segment.value / total) * geometry.size.width
+                        let width = total > 0 ? (segment.value / total) * geometry.size.width : 0
                         RoundedRectangle(cornerRadius: height / 2)
                             .fill(segment.color)
                             .frame(width: max(width, 0))

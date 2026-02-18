@@ -748,9 +748,10 @@ class SmartCleanManager: ObservableObject {
 
         do {
             try process.run()
+            // Read data BEFORE waitUntilExit to prevent deadlock when pipe buffer fills
+            let data = pipe.fileHandleForReading.readDataToEndOfFile()
             process.waitUntilExit()
 
-            let data = pipe.fileHandleForReading.readDataToEndOfFile()
             if let output = String(data: data, encoding: .utf8),
                let sizeStr = output.split(separator: "\t").first,
                let sizeKB = UInt64(sizeStr) {

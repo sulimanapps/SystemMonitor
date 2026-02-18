@@ -516,7 +516,7 @@ struct DiskDonutChart: View {
 
             // Used segment
             Circle()
-                .trim(from: 0, to: animationProgress * (used / total))
+                .trim(from: 0, to: total > 0 ? animationProgress * (used / total) : 0)
                 .stroke(
                     Theme.Colors.statusGradient(for: usedPercentage),
                     style: StrokeStyle(lineWidth: size * 0.15, lineCap: .round)

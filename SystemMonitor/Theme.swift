@@ -201,8 +201,10 @@ import ServiceManagement
 
 class SettingsManager: ObservableObject {
     @Published var refreshRate: Double = 2.0
+    private var suppressLoginItemUpdate = false
     @Published var startAtLogin: Bool = false {
         didSet {
+            guard !suppressLoginItemUpdate else { return }
             updateLoginItem()
         }
     }
@@ -227,17 +229,20 @@ class SettingsManager: ObservableObject {
     }
 
     init() {
+        suppressLoginItemUpdate = true
         loadSettings()
         syncLoginStatus()
+        suppressLoginItemUpdate = false
     }
 
     // Sync startAtLogin with actual SMAppService status
     func syncLoginStatus() {
         let actualStatus = SMAppService.mainApp.status == .enabled
         if startAtLogin != actualStatus {
-            // Update without triggering didSet to avoid loop
             UserDefaults.standard.set(actualStatus, forKey: "startAtLogin")
+            suppressLoginItemUpdate = true
             startAtLogin = actualStatus
+            suppressLoginItemUpdate = false
         }
     }
 
@@ -246,7 +251,9 @@ class SettingsManager: ObservableObject {
             refreshRate = rate
         }
         // Check actual SMAppService status instead of UserDefaults
+        suppressLoginItemUpdate = true
         startAtLogin = SMAppService.mainApp.status == .enabled
+        suppressLoginItemUpdate = false
         if let cpu = UserDefaults.standard.object(forKey: "cpuAlertThreshold") as? Double {
             cpuAlertThreshold = cpu
         }

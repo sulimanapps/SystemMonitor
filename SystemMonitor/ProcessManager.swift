@@ -31,7 +31,12 @@ class ProcessManager: ObservableObject {
     @Published var searchText = ""
     @Published var killError: String?
 
-    private var isLoadingInProgress = false
+    private let loadLock = NSLock()
+    private var _isLoadingInProgress = false
+    private var isLoadingInProgress: Bool {
+        get { loadLock.lock(); defer { loadLock.unlock() }; return _isLoadingInProgress }
+        set { loadLock.lock(); defer { loadLock.unlock() }; _isLoadingInProgress = newValue }
+    }
 
     enum SortOption: String, CaseIterable {
         case memory = "Memory"
@@ -187,7 +192,7 @@ class ProcessManager: ObservableObject {
         }
     }
 
-    private func isSystemProcess(name: String, user: String) -> Bool {
+    func isSystemProcess(name: String, user: String) -> Bool {
         // System users
         let systemUsers: Set<String> = ["root", "_windowserver", "_coreaudiod", "_mdnsresponder",
                                          "_spotlight", "_hidd", "_distnoted", "_networkd"]
@@ -210,7 +215,7 @@ class ProcessManager: ObservableObject {
         return systemProcesses.contains(baseName)
     }
 
-    private func cleanProcessName(_ name: String) -> String {
+    func cleanProcessName(_ name: String) -> String {
         var baseName = (name as NSString).lastPathComponent
 
         // Remove common suffixes

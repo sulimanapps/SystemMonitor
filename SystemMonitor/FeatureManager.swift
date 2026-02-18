@@ -117,6 +117,7 @@ class FeatureManager: ObservableObject {
 
     // Alerts
     @Published var alertsEnabled: Bool = true
+    private let hostPort: mach_port_t = mach_host_self()
     private var highCPUStartTime: Date?
     private var lastRAMAlert: Date?
     private var lastDiskAlert: Date?
@@ -964,7 +965,7 @@ class FeatureManager: ObservableObject {
 
         let result = withUnsafeMutablePointer(to: &stats) { pointer in
             pointer.withMemoryRebound(to: integer_t.self, capacity: Int(count)) { pointer in
-                host_statistics64(mach_host_self(), HOST_VM_INFO64, pointer, &count)
+                host_statistics64(hostPort, HOST_VM_INFO64, pointer, &count)
             }
         }
 

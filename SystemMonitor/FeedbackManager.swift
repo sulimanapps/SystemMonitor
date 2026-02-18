@@ -19,7 +19,9 @@ class FeedbackManager: ObservableObject {
     @Published var errorMessage: String = ""
 
     private var feedbackFilePath: String {
-        let documentsPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+        guard let documentsPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
+            return NSHomeDirectory() + "/Documents/SystemMonitor-Feedback.txt"
+        }
         return documentsPath.appendingPathComponent("SystemMonitor-Feedback.txt").path
     }
 
@@ -63,11 +65,11 @@ class FeedbackManager: ObservableObject {
             if fileManager.fileExists(atPath: feedbackFilePath) {
                 // Append to existing file
                 let fileHandle = try FileHandle(forWritingTo: URL(fileURLWithPath: feedbackFilePath))
+                defer { try? fileHandle.close() }
                 fileHandle.seekToEndOfFile()
                 if let data = feedbackEntry.data(using: String.Encoding.utf8) {
                     fileHandle.write(data)
                 }
-                fileHandle.closeFile()
             } else {
                 // Create new file with header
                 let header = """
