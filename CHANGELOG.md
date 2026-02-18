@@ -1,5 +1,15 @@
 # Changelog
 
+## v2.3.1 — Responsive UI Release
+
+### Responsive Layout
+- DashboardView: Replaced fixed 260/240px columns with GeometryReader proportional layout + ScrollView
+- ActionBar: Wrapped in horizontal ScrollView to prevent button clipping on narrow windows
+- SettingsPanel: Flexible width (300–400) instead of fixed 360
+- All 11 sheet/modal views: Replaced fixed sizes with min/ideal/max constraints for Split View, Stage Manager, and small screens
+- Progress bars and pickers: Replaced fixed widths with maxWidth for adaptive sizing
+- StatusMenuView: Removed fixed height constraint
+
 ## v2.3.0 — Deep Code Audit Release
 
 ### Crash & Runtime Safety
