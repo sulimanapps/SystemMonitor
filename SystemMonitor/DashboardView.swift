@@ -563,6 +563,7 @@ struct ThermalCard: View {
     }
 
     private func temperatureColor(_ temp: Double) -> Color {
+        if temp < 0 { return .secondary }
         if temp >= 85 { return Theme.Colors.critical }
         else if temp >= 70 { return Theme.Colors.warning }
         else if temp >= 55 { return Color.yellow }
@@ -570,7 +571,8 @@ struct ThermalCard: View {
     }
 
     private var thermalStatus: String {
-        let avg = (cpuTemp + gpuTemp) / 2
+        guard cpuTemp >= 0 else { return "Unknown" }
+        let avg = (cpuTemp + max(gpuTemp, 0)) / 2
         if avg >= 85 { return "Critical - Throttling" }
         else if avg >= 70 { return "Warm" }
         else if avg >= 55 { return "Normal" }
@@ -578,7 +580,8 @@ struct ThermalCard: View {
     }
 
     private var thermalStatusColor: Color {
-        temperatureColor((cpuTemp + gpuTemp) / 2)
+        guard cpuTemp >= 0 else { return .secondary }
+        return temperatureColor((cpuTemp + max(gpuTemp, 0)) / 2)
     }
 }
 

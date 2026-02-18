@@ -107,7 +107,18 @@ class StartupManager: ObservableObject {
 
         do {
             try process.run()
-            process.waitUntilExit()
+
+            // Add timeout to prevent indefinite hang
+            let semaphore = DispatchSemaphore(value: 0)
+            DispatchQueue.global().async {
+                process.waitUntilExit()
+                semaphore.signal()
+            }
+            if semaphore.wait(timeout: .now() + 2.0) == .timedOut {
+                process.terminate()
+                return false
+            }
+
             return process.terminationStatus == 0
         } catch {
             return false
@@ -201,8 +212,17 @@ class StartupManager: ObservableObject {
         process.standardOutput = FileHandle.nullDevice
         process.standardError = FileHandle.nullDevice
 
-        try? process.run()
-        process.waitUntilExit()
+        guard (try? process.run()) != nil else { return }
+
+        // Add timeout to prevent indefinite hang
+        let semaphore = DispatchSemaphore(value: 0)
+        DispatchQueue.global().async {
+            process.waitUntilExit()
+            semaphore.signal()
+        }
+        if semaphore.wait(timeout: .now() + 5.0) == .timedOut {
+            process.terminate()
+        }
     }
 
     func openInFinder(_ item: StartupItem) {

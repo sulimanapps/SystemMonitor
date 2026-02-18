@@ -93,7 +93,7 @@ class FeatureManager: ObservableObject {
 
     // Duplicates
     @Published var duplicateGroups: [DuplicateGroup] = []
-    @Published var isScannningDuplicates: Bool = false
+    @Published var isScanningDuplicates: Bool = false
     @Published var duplicateScanProgress: String = ""
 
     // Old Files
@@ -205,7 +205,7 @@ class FeatureManager: ObservableObject {
 
     // MARK: - Feature 2: Duplicate Files Finder
     func scanForDuplicates() {
-        isScannningDuplicates = true
+        isScanningDuplicates = true
         duplicateGroups = []
         duplicateScanProgress = "Starting scan..."
 
@@ -281,7 +281,7 @@ class FeatureManager: ObservableObject {
 
             DispatchQueue.main.async {
                 self?.duplicateGroups = duplicates
-                self?.isScannningDuplicates = false
+                self?.isScanningDuplicates = false
                 self?.duplicateScanProgress = ""
             }
         }
@@ -710,19 +710,19 @@ class FeatureManager: ObservableObject {
         do {
             try task.run()
 
+            // Read data BEFORE waiting to prevent pipe buffer deadlock
+            let data = pipe.fileHandleForReading.readDataToEndOfFile()
+
             // Timeout to prevent hanging
             let semaphore = DispatchSemaphore(value: 0)
             DispatchQueue.global().async {
                 task.waitUntilExit()
                 semaphore.signal()
             }
-
             if semaphore.wait(timeout: .now() + .milliseconds(500)) == .timedOut {
                 task.terminate()
-                return
             }
 
-            let data = pipe.fileHandleForReading.readDataToEndOfFile()
             if let output = String(data: data, encoding: .utf8) {
                 // Parse cycle count
                 if let cycleMatch = output.range(of: "\"CycleCount\" = (\\d+)", options: .regularExpression) {
@@ -807,6 +807,9 @@ class FeatureManager: ObservableObject {
         do {
             try task.run()
 
+            // Read data BEFORE waiting to prevent pipe deadlock
+            let data = pipe.fileHandleForReading.readDataToEndOfFile()
+
             // Timeout to prevent hanging
             let semaphore = DispatchSemaphore(value: 0)
             DispatchQueue.global().async {
@@ -816,40 +819,39 @@ class FeatureManager: ObservableObject {
 
             if semaphore.wait(timeout: .now() + .milliseconds(500)) == .timedOut {
                 task.terminate()
-                cpuTemperature = 50
-                gpuTemperature = 45
+                cpuTemperature = -1
+                gpuTemperature = -1
                 return
             }
 
-            let data = pipe.fileHandleForReading.readDataToEndOfFile()
             if let output = String(data: data, encoding: .utf8) {
                 // Parse CPU_Speed_Limit to estimate thermal state
                 if let speedMatch = output.range(of: "CPU_Speed_Limit\\s*=\\s*(\\d+)", options: .regularExpression) {
                     let speedStr = output[speedMatch]
                     if let numRange = speedStr.range(of: "\\d+", options: .regularExpression) {
                         let speedLimit = Int(speedStr[numRange]) ?? 100
-                        // Estimate temperature based on throttling
-                        // 100 = cool (~45°C), lower = hotter
+                        // Estimate temperature range based on throttling level
+                        // -1 means unavailable; show deterministic estimates, not random
                         if speedLimit >= 100 {
-                            cpuTemperature = 45 + Double.random(in: 0...5)
+                            cpuTemperature = 45
                         } else if speedLimit >= 80 {
-                            cpuTemperature = 65 + Double.random(in: 0...5)
+                            cpuTemperature = 65
                         } else if speedLimit >= 50 {
-                            cpuTemperature = 80 + Double.random(in: 0...5)
+                            cpuTemperature = 80
                         } else {
-                            cpuTemperature = 90 + Double.random(in: 0...5)
+                            cpuTemperature = 90
                         }
-                        gpuTemperature = cpuTemperature - Double.random(in: 3...8)
+                        gpuTemperature = cpuTemperature - 5
                     }
                 } else {
-                    // Default reasonable values when we can't read thermal state
-                    cpuTemperature = 50 + Double.random(in: 0...10)
-                    gpuTemperature = cpuTemperature - Double.random(in: 3...8)
+                    // Cannot determine thermal state — mark as unavailable
+                    cpuTemperature = -1
+                    gpuTemperature = -1
                 }
             }
         } catch {
-            cpuTemperature = 50
-            gpuTemperature = 45
+            cpuTemperature = -1
+            gpuTemperature = -1
         }
     }
 
@@ -884,61 +886,50 @@ class FeatureManager: ObservableObject {
         ramCleanerState.status = "Analyzing memory..."
         ramCleanerState.isComplete = false
 
-        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+        // Get memory before cleaning
+        let totalMemory = Foundation.ProcessInfo.processInfo.physicalMemory
+        let (usedBefore, _) = self.getMemoryUsage()
+        let freeBefore = totalMemory > usedBefore ? totalMemory - usedBefore : 0
+
+        ramCleanerState.totalMemory = totalMemory
+        ramCleanerState.usedBefore = usedBefore
+        ramCleanerState.memoryBefore = freeBefore
+        ramCleanerState.status = "Requesting admin access..."
+
+        // NSAppleScript must run on main thread
+        let script = """
+        do shell script "purge" with administrator privileges
+        """
+
+        var error: NSDictionary?
+        if let appleScript = NSAppleScript(source: script) {
+            ramCleanerState.status = "Purging memory cache..."
+
+            appleScript.executeAndReturnError(&error)
+
+            if error != nil {
+                // If user cancelled or error, try without admin
+                ramCleanerState.status = "Running without admin..."
+
+                // Fallback: memory_pressure without admin
+                do {
+                    let task = Process()
+                    task.executableURL = URL(fileURLWithPath: "/usr/bin/memory_pressure")
+                    task.arguments = ["-S", "-l", "warn"]
+                    task.standardOutput = FileHandle.nullDevice
+                    task.standardError = FileHandle.nullDevice
+                    try task.run()
+                    task.waitUntilExit()
+                } catch {}
+            }
+        }
+
+        // Delay to let system stabilize, then measure results on background thread
+        DispatchQueue.global(qos: .userInitiated).asyncAfter(deadline: .now() + 1.0) { [weak self] in
             guard let self = self else { return }
 
-            // Get memory before cleaning
-            let totalMemory = Foundation.ProcessInfo.processInfo.physicalMemory
-            let (usedBefore, _) = self.getMemoryUsage()
-            let freeBefore = totalMemory > usedBefore ? totalMemory - usedBefore : 0
-
-            DispatchQueue.main.async {
-                self.ramCleanerState.totalMemory = totalMemory
-                self.ramCleanerState.usedBefore = usedBefore
-                self.ramCleanerState.memoryBefore = freeBefore
-                self.ramCleanerState.status = "Requesting admin access..."
-            }
-
-            // Use AppleScript to run purge with admin privileges (most effective)
-            let script = """
-            do shell script "purge" with administrator privileges
-            """
-
-            var error: NSDictionary?
-            if let appleScript = NSAppleScript(source: script) {
-                DispatchQueue.main.async {
-                    self.ramCleanerState.status = "Purging memory cache..."
-                }
-
-                appleScript.executeAndReturnError(&error)
-
-                if error != nil {
-                    // If user cancelled or error, try without admin
-                    DispatchQueue.main.async {
-                        self.ramCleanerState.status = "Running without admin..."
-                    }
-
-                    // Fallback: memory_pressure without admin
-                    do {
-                        let task = Process()
-                        task.executableURL = URL(fileURLWithPath: "/usr/bin/memory_pressure")
-                        task.arguments = ["-S", "-l", "warn"]
-                        task.standardOutput = FileHandle.nullDevice
-                        task.standardError = FileHandle.nullDevice
-                        try task.run()
-                        task.waitUntilExit()
-                    } catch {}
-                }
-            }
-
-            // Small delay to let system stabilize
-            Thread.sleep(forTimeInterval: 1.0)
-
-            // Get memory after cleaning
             let (usedAfter, _) = self.getMemoryUsage()
             let freeAfter = totalMemory > usedAfter ? totalMemory - usedAfter : 0
-
-            // Calculate freed memory
             let freedBytes = usedBefore > usedAfter ? usedBefore - usedAfter : 0
 
             DispatchQueue.main.async {

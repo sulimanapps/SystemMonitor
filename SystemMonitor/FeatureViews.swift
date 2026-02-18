@@ -96,7 +96,7 @@ struct DuplicateFilesView: View {
     var body: some View {
         CollapsibleSection(title: "Duplicate Files", icon: "doc.on.doc", isExpanded: $isExpanded) {
             VStack(alignment: .leading, spacing: 4) {
-                if featureManager.isScannningDuplicates {
+                if featureManager.isScanningDuplicates {
                     HStack {
                         ProgressView()
                             .scaleEffect(0.7)
@@ -541,10 +541,12 @@ struct TemperatureView: View {
                     Text("CPU")
                         .font(.caption)
                     Spacer()
-                    Text(String(format: "%.0f°C", featureManager.cpuTemperature))
+                    Text(featureManager.cpuTemperature < 0 ? "N/A" : String(format: "%.0f°C", featureManager.cpuTemperature))
                         .font(.caption.monospacedDigit())
-                        .foregroundColor(temperatureColor(featureManager.cpuTemperature))
-                    temperatureIndicator(featureManager.cpuTemperature)
+                        .foregroundColor(featureManager.cpuTemperature < 0 ? .secondary : temperatureColor(featureManager.cpuTemperature))
+                    if featureManager.cpuTemperature >= 0 {
+                        temperatureIndicator(featureManager.cpuTemperature)
+                    }
                 }
 
                 // GPU Temperature
@@ -555,10 +557,12 @@ struct TemperatureView: View {
                     Text("GPU")
                         .font(.caption)
                     Spacer()
-                    Text(String(format: "%.0f°C", featureManager.gpuTemperature))
+                    Text(featureManager.gpuTemperature < 0 ? "N/A" : String(format: "%.0f°C", featureManager.gpuTemperature))
                         .font(.caption.monospacedDigit())
-                        .foregroundColor(temperatureColor(featureManager.gpuTemperature))
-                    temperatureIndicator(featureManager.gpuTemperature)
+                        .foregroundColor(featureManager.gpuTemperature < 0 ? .secondary : temperatureColor(featureManager.gpuTemperature))
+                    if featureManager.gpuTemperature >= 0 {
+                        temperatureIndicator(featureManager.gpuTemperature)
+                    }
                 }
 
                 // Thermal status
@@ -602,7 +606,8 @@ struct TemperatureView: View {
     }
 
     private var thermalStateText: String {
-        let avgTemp = (featureManager.cpuTemperature + featureManager.gpuTemperature) / 2
+        guard featureManager.cpuTemperature >= 0 else { return "Unknown" }
+        let avgTemp = (featureManager.cpuTemperature + max(featureManager.gpuTemperature, 0)) / 2
         if avgTemp >= 85 { return "Critical" }
         else if avgTemp >= 70 { return "Warm" }
         else if avgTemp >= 55 { return "Normal" }
@@ -610,7 +615,8 @@ struct TemperatureView: View {
     }
 
     private var thermalStateColor: Color {
-        let avgTemp = (featureManager.cpuTemperature + featureManager.gpuTemperature) / 2
+        guard featureManager.cpuTemperature >= 0 else { return .secondary }
+        let avgTemp = (featureManager.cpuTemperature + max(featureManager.gpuTemperature, 0)) / 2
         if avgTemp >= 85 { return .red }
         else if avgTemp >= 70 { return .orange }
         else if avgTemp >= 55 { return .primary }

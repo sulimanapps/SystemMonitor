@@ -144,23 +144,18 @@ class SystemMonitor: ObservableObject {
         do {
             try task.run()
 
-            // Set a timeout to prevent hanging
-            let deadline = DispatchTime.now() + .milliseconds(500)
-            let semaphore = DispatchSemaphore(value: 0)
+            // Read data BEFORE waiting to prevent pipe buffer deadlock
+            let data = pipe.fileHandleForReading.readDataToEndOfFile()
 
+            // Timeout to ensure waitUntilExit doesn't hang
+            let semaphore = DispatchSemaphore(value: 0)
             DispatchQueue.global(qos: .utility).async {
                 task.waitUntilExit()
                 semaphore.signal()
             }
-
-            let result = semaphore.wait(timeout: deadline)
-
-            if result == .timedOut {
+            if semaphore.wait(timeout: .now() + .milliseconds(500)) == .timedOut {
                 task.terminate()
-                return processes
             }
-
-            let data = pipe.fileHandleForReading.readDataToEndOfFile()
             if let output = String(data: data, encoding: .utf8) {
                 let lines = output.components(separatedBy: "\n").dropFirst()
                 var tempProcesses: [(name: String, memory: UInt64, pid: Int32)] = []

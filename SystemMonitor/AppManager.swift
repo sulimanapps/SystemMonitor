@@ -145,16 +145,19 @@ class AppManager: ObservableObject {
     }
 
     private func calculateSizesInBackground() {
+        // Capture a snapshot of apps to iterate safely
+        let appsSnapshot = self.installedApps
+
         DispatchQueue.global(qos: .background).async { [weak self] in
             guard let self = self else { return }
 
-            for (index, app) in self.installedApps.enumerated() {
+            for app in appsSnapshot {
                 let size = self.getAppSizeFast(path: app.path)
 
                 DispatchQueue.main.async {
-                    if index < self.installedApps.count {
-                        // Preserve all existing data, only update size
-                        let currentApp = self.installedApps[index]
+                    // Find by ID to avoid index mismatch if array changed
+                    if let currentIndex = self.installedApps.firstIndex(where: { $0.id == app.id }) {
+                        let currentApp = self.installedApps[currentIndex]
                         let updatedApp = InstalledApp(
                             name: currentApp.name,
                             path: currentApp.path,
@@ -167,7 +170,7 @@ class AppManager: ObservableObject {
                             relatedFiles: currentApp.relatedFiles,
                             relatedFilesLoaded: currentApp.relatedFilesLoaded
                         )
-                        self.installedApps[index] = updatedApp
+                        self.installedApps[currentIndex] = updatedApp
                     }
                 }
             }
@@ -733,13 +736,8 @@ class AppManager: ObservableObject {
                         try fileManager.trashItem(at: URL(fileURLWithPath: path), resultingItemURL: nil)
                         freedSize += size
                     } catch {
-                        // Try direct removal if trash fails
-                        do {
-                            try fileManager.removeItem(atPath: path)
-                            freedSize += size
-                        } catch {
-                            // Continue on error
-                        }
+                        // Log and continue — avoid permanent deletion as fallback
+                        print("Failed to trash \(path): \(error.localizedDescription)")
                     }
                 }
             }

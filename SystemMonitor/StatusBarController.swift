@@ -184,26 +184,20 @@ class StatusBarController: ObservableObject {
         timer = Timer.scheduledTimer(withTimeInterval: interval, repeats: true) { [weak self] _ in
             guard let self = self else { return }
 
-            // Run heavy operations on background thread
-            DispatchQueue.global(qos: .utility).async { [weak self] in
-                guard let self = self else { return }
+            // Update system stats on main thread (updates @Published properties)
+            self.systemMonitor.updateStats()
+            self.featureManager.updateNetworkStats()
+            self.featureManager.updateBatteryInfo()
+            self.featureManager.updateTemperatures()
 
-                self.systemMonitor.updateStats()
-                self.featureManager.updateNetworkStats()
-                self.featureManager.updateBatteryInfo()
-                self.featureManager.updateTemperatures()
+            // Check for alerts
+            self.featureManager.checkForAlerts(
+                cpuUsage: self.systemMonitor.cpuUsage,
+                memoryUsage: self.systemMonitor.memoryUsage,
+                diskUsage: self.systemMonitor.diskUsage
+            )
 
-                // Check for alerts
-                self.featureManager.checkForAlerts(
-                    cpuUsage: self.systemMonitor.cpuUsage,
-                    memoryUsage: self.systemMonitor.memoryUsage,
-                    diskUsage: self.systemMonitor.diskUsage
-                )
-
-                DispatchQueue.main.async { [weak self] in
-                    self?.updateStatusIcon()
-                }
-            }
+            self.updateStatusIcon()
         }
         timer?.fire()
     }
@@ -311,12 +305,12 @@ class StatusBarController: ObservableObject {
 
 extension NSImage {
     func tinted(with color: NSColor) -> NSImage {
-        guard let image = self.copy() as? NSImage else { return self }
-        image.lockFocus()
-        color.set()
-        let imageRect = NSRect(origin: .zero, size: image.size)
-        imageRect.fill(using: .sourceAtop)
-        image.unlockFocus()
+        let image = NSImage(size: self.size, flipped: false) { rect in
+            self.draw(in: rect)
+            color.set()
+            rect.fill(using: .sourceAtop)
+            return true
+        }
         image.isTemplate = false
         return image
     }

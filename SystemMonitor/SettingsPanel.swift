@@ -135,7 +135,7 @@ struct SettingsPanel: View {
                                     Text("SystemMonitor Pro")
                                         .font(Theme.Typography.headline)
                                         .foregroundColor(Theme.Colors.textPrimary)
-                                    Text("Version 2.0.0")
+                                    Text("Version \(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "2.2.0")")
                                         .font(Theme.Typography.caption)
                                         .foregroundColor(Theme.Colors.textSecondary)
                                 }
