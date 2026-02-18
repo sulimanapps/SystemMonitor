@@ -186,7 +186,7 @@ class SystemReportManager: ObservableObject {
             info["Total"] = formatBytes(totalSpace)
             info["Used"] = formatBytes(usedSpace)
             info["Free"] = formatBytes(freeSpace)
-            info["Usage"] = String(format: "%.1f%%", Double(usedSpace) / Double(totalSpace) * 100)
+            info["Usage"] = totalSpace > 0 ? String(format: "%.1f%%", Double(usedSpace) / Double(totalSpace) * 100) : "0.0%"
         } catch {}
 
         return info

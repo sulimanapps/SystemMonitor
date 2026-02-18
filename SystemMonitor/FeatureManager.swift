@@ -322,7 +322,7 @@ class FeatureManager: ObservableObject {
                 "\(home)/Desktop"
             ]
 
-            let sixMonthsAgo = Calendar.current.date(byAdding: .month, value: -6, to: Date())!
+            guard let sixMonthsAgo = Calendar.current.date(byAdding: .month, value: -6, to: Date()) else { return }
             var oldFilesList: [OldFileInfo] = []
 
             for directory in directories {
@@ -449,7 +449,7 @@ class FeatureManager: ObservableObject {
 
         // RAM Alert (> 90%)
         if memoryUsage > 90 {
-            if lastRAMAlert == nil || now.timeIntervalSince(lastRAMAlert!) > 300 { // 5 min cooldown
+            if lastRAMAlert.map({ now.timeIntervalSince($0) > 300 }) ?? true { // 5 min cooldown
                 sendNotification(
                     title: "High Memory Usage",
                     body: "Memory usage is at \(Int(memoryUsage))%. Consider closing some applications."
@@ -460,7 +460,7 @@ class FeatureManager: ObservableObject {
 
         // Disk Alert (> 90%)
         if diskUsage > 90 {
-            if lastDiskAlert == nil || now.timeIntervalSince(lastDiskAlert!) > 3600 { // 1 hour cooldown
+            if lastDiskAlert.map({ now.timeIntervalSince($0) > 3600 }) ?? true { // 1 hour cooldown
                 sendNotification(
                     title: "Low Disk Space",
                     body: "Disk usage is at \(Int(diskUsage))%. Consider cleaning up some files."
@@ -473,8 +473,8 @@ class FeatureManager: ObservableObject {
         if cpuUsage > 95 {
             if highCPUStartTime == nil {
                 highCPUStartTime = now
-            } else if now.timeIntervalSince(highCPUStartTime!) > 30 {
-                if lastCPUAlert == nil || now.timeIntervalSince(lastCPUAlert!) > 60 { // 1 min cooldown
+            } else if let startTime = highCPUStartTime, now.timeIntervalSince(startTime) > 30 {
+                if lastCPUAlert.map({ now.timeIntervalSince($0) > 60 }) ?? true { // 1 min cooldown
                     sendNotification(
                         title: "High CPU Usage",
                         body: "CPU has been above 95% for 30+ seconds. Check running processes."
@@ -536,7 +536,7 @@ class FeatureManager: ObservableObject {
                     return
                 }
 
-                let data = pipe.fileHandleForReading.readDataToEndOfFile()
+                let data = pipe.fileHandleForReading.availableData
                 if let output = String(data: data, encoding: .utf8) {
                     let lines = output.components(separatedBy: "\n").dropFirst()
 
@@ -869,7 +869,7 @@ class FeatureManager: ObservableObject {
         ramCleanerState = RAMCleanerState()
         ramCleanerState.totalMemory = totalMemory
         ramCleanerState.usedBefore = used
-        ramCleanerState.memoryBefore = totalMemory - used
+        ramCleanerState.memoryBefore = totalMemory > used ? totalMemory - used : 0
         ramCleanerState.status = "Ready to clean"
         ramCleanerState.isComplete = false
 
@@ -890,7 +890,7 @@ class FeatureManager: ObservableObject {
             // Get memory before cleaning
             let totalMemory = Foundation.ProcessInfo.processInfo.physicalMemory
             let (usedBefore, _) = self.getMemoryUsage()
-            let freeBefore = totalMemory - usedBefore
+            let freeBefore = totalMemory > usedBefore ? totalMemory - usedBefore : 0
 
             DispatchQueue.main.async {
                 self.ramCleanerState.totalMemory = totalMemory
@@ -936,7 +936,7 @@ class FeatureManager: ObservableObject {
 
             // Get memory after cleaning
             let (usedAfter, _) = self.getMemoryUsage()
-            let freeAfter = totalMemory - usedAfter
+            let freeAfter = totalMemory > usedAfter ? totalMemory - usedAfter : 0
 
             // Calculate freed memory
             let freedBytes = usedBefore > usedAfter ? usedBefore - usedAfter : 0

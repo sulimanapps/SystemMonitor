@@ -188,10 +188,10 @@ class AppManager: ObservableObject {
 
         // Check if system app
         let isSystemApp = systemAppNames.contains(appName) ||
-            (bundleID != nil && systemBundleIDPrefixes.contains(where: { bundleID!.hasPrefix($0) }))
+            (bundleID.map { id in systemBundleIDPrefixes.contains(where: { id.hasPrefix($0) }) } ?? false)
 
         // Check if running
-        let isRunning = bundleID != nil && runningBundleIDs.contains(bundleID!)
+        let isRunning = bundleID.map { runningBundleIDs.contains($0) } ?? false
 
         // Get icon
         let icon = NSWorkspace.shared.icon(forFile: path)
@@ -233,10 +233,10 @@ class AppManager: ObservableObject {
 
         // Check if system app
         let isSystemApp = systemAppNames.contains(appName) ||
-            (bundleID != nil && systemBundleIDPrefixes.contains(where: { bundleID!.hasPrefix($0) }))
+            (bundleID.map { id in systemBundleIDPrefixes.contains(where: { id.hasPrefix($0) }) } ?? false)
 
         // Check if running
-        let isRunning = bundleID != nil && runningBundleIDs.contains(bundleID!)
+        let isRunning = bundleID.map { runningBundleIDs.contains($0) } ?? false
 
         // Get size (quick estimate using allocatedSize)
         let size = getAppSizeFast(path: path)

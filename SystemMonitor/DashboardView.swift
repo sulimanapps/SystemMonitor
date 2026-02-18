@@ -303,7 +303,7 @@ struct DiskCard: View {
                             .font(Theme.Typography.statMedium)
                             .foregroundColor(Theme.Colors.statusColor(for: usage))
 
-                        Text("\(formatBytes(total - used)) free")
+                        Text("\(formatBytes(total > used ? total - used : 0)) free")
                             .font(Theme.Typography.caption)
                             .foregroundColor(Theme.Colors.textSecondary)
                     }

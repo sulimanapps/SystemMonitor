@@ -642,6 +642,9 @@ class SmartCleanManager: ObservableObject {
                     let currentProgress = processedCount
                     lock.unlock()
 
+                    // Safety: skip if total is 0
+                    guard total > 0 else { return }
+
                     // Safety check - never delete protected paths
                     if self.isProtectedPath(item.path) { return }
 

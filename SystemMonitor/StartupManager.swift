@@ -102,8 +102,7 @@ class StartupManager: ObservableObject {
         process.executableURL = URL(fileURLWithPath: "/bin/launchctl")
         process.arguments = ["list", label]
 
-        let pipe = Pipe()
-        process.standardOutput = pipe
+        process.standardOutput = FileHandle.nullDevice
         process.standardError = FileHandle.nullDevice
 
         do {

@@ -82,9 +82,8 @@ class DiskHealthManager: ObservableObject {
 
         do {
             try process.run()
-            process.waitUntilExit()
-
             let data = pipe.fileHandleForReading.readDataToEndOfFile()
+            process.waitUntilExit()
 
             if let plist = try? PropertyListSerialization.propertyList(from: data, format: nil) as? [String: Any],
                let allDisks = plist["AllDisksAndPartitions"] as? [[String: Any]] {
@@ -106,9 +105,9 @@ class DiskHealthManager: ObservableObject {
                             capacity: size,
                             isSSD: detailedInfo["isSSD"] == "true",
                             healthStatus: healthStatus,
-                            temperature: Int(detailedInfo["temperature"] ?? ""),
-                            powerOnHours: Int(detailedInfo["powerOnHours"] ?? ""),
-                            powerCycleCount: Int(detailedInfo["powerCycleCount"] ?? ""),
+                            temperature: Int(detailedInfo["temperature"] ?? "0"),
+                            powerOnHours: Int(detailedInfo["powerOnHours"] ?? "0"),
+                            powerCycleCount: Int(detailedInfo["powerCycleCount"] ?? "0"),
                             readErrorRate: nil,
                             reallocatedSectors: nil,
                             wearLevelingCount: nil
@@ -142,9 +141,8 @@ class DiskHealthManager: ObservableObject {
 
         do {
             try process.run()
-            process.waitUntilExit()
-
             let data = pipe.fileHandleForReading.readDataToEndOfFile()
+            process.waitUntilExit()
 
             if let plist = try? PropertyListSerialization.propertyList(from: data, format: nil) as? [String: Any] {
                 info["name"] = plist["MediaName"] as? String ?? plist["IORegistryEntryName"] as? String ?? deviceIdentifier
@@ -182,9 +180,8 @@ class DiskHealthManager: ObservableObject {
 
         do {
             try process.run()
-            process.waitUntilExit()
-
             let data = pipe.fileHandleForReading.readDataToEndOfFile()
+            process.waitUntilExit()
 
             if let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
                let storageData = json["SPStorageDataType"] as? [[String: Any]] {
