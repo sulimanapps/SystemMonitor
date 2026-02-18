@@ -27,6 +27,10 @@ class SystemMonitor: ObservableObject {
         updateStats()
     }
 
+    deinit {
+        mach_port_deallocate(mach_task_self_, hostPort)
+    }
+
     func updateStats() {
         cpuUsage = getCPUUsage()
         cpuHistory.removeFirst()
@@ -134,7 +138,7 @@ class SystemMonitor: ObservableObject {
         var processes: [AppProcessInfo] = []
 
         let task = Process()
-        task.launchPath = "/bin/ps"
+        task.executableURL = URL(fileURLWithPath: "/bin/ps")
         task.arguments = ["-axm", "-o", "pid,rss,comm"]
 
         let pipe = Pipe()

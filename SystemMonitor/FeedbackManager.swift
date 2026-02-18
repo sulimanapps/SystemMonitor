@@ -49,7 +49,7 @@ class FeedbackManager: ObservableObject {
         Date: \(readableDate)
         Timestamp: \(timestamp)
         Category: \(selectedCategory.rawValue)
-        App Version: 2.0.0
+        App Version: \(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "Unknown")
         macOS: \(Foundation.ProcessInfo.processInfo.operatingSystemVersionString)
         ----------------------------------------
 

@@ -222,41 +222,7 @@ class AppManager: ObservableObject {
         return nil
     }
 
-    private func createAppInfo(from path: String, runningBundleIDs: Set<String>) -> InstalledApp? {
-        let appName = (path as NSString).lastPathComponent.replacingOccurrences(of: ".app", with: "")
 
-        // Skip SystemMonitor itself
-        if appName == "SystemMonitor" {
-            return nil
-        }
-
-        // Get bundle info
-        let bundle = Bundle(path: path)
-        let bundleID = bundle?.bundleIdentifier
-
-        // Check if system app
-        let isSystemApp = systemAppNames.contains(appName) ||
-            (bundleID.map { id in systemBundleIDPrefixes.contains(where: { id.hasPrefix($0) }) } ?? false)
-
-        // Check if running
-        let isRunning = bundleID.map { runningBundleIDs.contains($0) } ?? false
-
-        // Get size (quick estimate using allocatedSize)
-        let size = getAppSizeFast(path: path)
-
-        // Get icon
-        let icon = NSWorkspace.shared.icon(forFile: path)
-
-        return InstalledApp(
-            name: appName,
-            path: path,
-            bundleID: bundleID,
-            size: size,
-            icon: icon,
-            isSystemApp: isSystemApp,
-            isRunning: isRunning
-        )
-    }
 
     private func getAppSizeFast(path: String) -> UInt64 {
         // Use URLResourceKey.totalFileAllocatedSizeKey for fast size calculation

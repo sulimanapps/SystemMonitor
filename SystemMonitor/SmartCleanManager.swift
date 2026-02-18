@@ -753,7 +753,16 @@ class SmartCleanManager: ObservableObject {
             try process.run()
             // Read data BEFORE waitUntilExit to prevent deadlock when pipe buffer fills
             let data = pipe.fileHandleForReading.readDataToEndOfFile()
-            process.waitUntilExit()
+
+            let duSemaphore = DispatchSemaphore(value: 0)
+            DispatchQueue.global().async {
+                process.waitUntilExit()
+                duSemaphore.signal()
+            }
+            if duSemaphore.wait(timeout: .now() + 5.0) == .timedOut {
+                process.terminate()
+                return calculateSizeSlow(path: path)
+            }
 
             if let output = String(data: data, encoding: .utf8),
                let sizeStr = output.split(separator: "\t").first,

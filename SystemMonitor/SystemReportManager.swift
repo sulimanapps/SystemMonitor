@@ -9,6 +9,10 @@ class SystemReportManager: ObservableObject {
     @Published var lastReportPath: String?
     private let hostPort: mach_port_t = mach_host_self()
 
+    deinit {
+        mach_port_deallocate(mach_task_self_, hostPort)
+    }
+
     struct SystemReport {
         var systemInfo: [String: String] = [:]
         var cpuInfo: [String: String] = [:]
@@ -207,7 +211,9 @@ class SystemReportManager: ObservableObject {
             try process.run()
             // Read data BEFORE waitUntilExit to prevent deadlock
             let data = pipe.fileHandleForReading.readDataToEndOfFile()
-            process.waitUntilExit()
+            let sem = DispatchSemaphore(value: 0)
+            DispatchQueue.global().async { process.waitUntilExit(); sem.signal() }
+            if sem.wait(timeout: .now() + 5.0) == .timedOut { process.terminate() }
 
             if let output = String(data: data, encoding: .utf8) {
                 if output.contains("InternalBattery") {
@@ -247,7 +253,9 @@ class SystemReportManager: ObservableObject {
             try process.run()
             // Read data BEFORE waitUntilExit to prevent deadlock
             let data = pipe.fileHandleForReading.readDataToEndOfFile()
-            process.waitUntilExit()
+            let sem = DispatchSemaphore(value: 0)
+            DispatchQueue.global().async { process.waitUntilExit(); sem.signal() }
+            if sem.wait(timeout: .now() + 5.0) == .timedOut { process.terminate() }
 
             if let output = String(data: data, encoding: .utf8) {
                 // Parse en0 (usually WiFi or Ethernet)
@@ -295,7 +303,9 @@ class SystemReportManager: ObservableObject {
 
             // Read data BEFORE waiting - this prevents deadlock
             let data = pipe.fileHandleForReading.readDataToEndOfFile()
-            process.waitUntilExit()
+            let sem = DispatchSemaphore(value: 0)
+            DispatchQueue.global().async { process.waitUntilExit(); sem.signal() }
+            if sem.wait(timeout: .now() + 5.0) == .timedOut { process.terminate() }
 
             if let output = String(data: data, encoding: .utf8) {
                 let lines = output.components(separatedBy: "\n")

@@ -300,7 +300,7 @@ class CacheManager: ObservableObject {
                    ownerID.uint32Value == getuid() {
                     let size = calculateDirectorySize(path: itemPath)
                     do {
-                        try fileManager.removeItem(atPath: itemPath)
+                        try fileManager.trashItem(at: URL(fileURLWithPath: itemPath), resultingItemURL: nil)
                         cleaned += size
                         logDeletedFile(path: formatPathForDisplay(itemPath), size: size)
                     } catch {
@@ -333,7 +333,7 @@ class CacheManager: ObservableObject {
                 let size = calculateDirectorySize(path: itemPath)
 
                 do {
-                    try fileManager.removeItem(atPath: itemPath)
+                    try fileManager.trashItem(at: URL(fileURLWithPath: itemPath), resultingItemURL: nil)
                     deleted += size
                     logDeletedFile(path: formatPathForDisplay(itemPath), size: size)
                 } catch {

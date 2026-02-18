@@ -157,6 +157,10 @@ class FeatureManager: ObservableObject {
         updateTemperatures()
     }
 
+    deinit {
+        mach_port_deallocate(mach_task_self_, hostPort)
+    }
+
     // MARK: - Feature 1: Large Apps Manager
     func loadLargeApps() {
         isLoadingApps = true
@@ -511,7 +515,7 @@ class FeatureManager: ObservableObject {
             var processes: [ProcessInfo2] = []
 
             let task = Process()
-            task.launchPath = "/bin/ps"
+            task.executableURL = URL(fileURLWithPath: "/bin/ps")
             task.arguments = ["-axo", "pid,%cpu,rss,comm", "-r"]
 
             let pipe = Pipe()
@@ -520,6 +524,9 @@ class FeatureManager: ObservableObject {
 
             do {
                 try task.run()
+
+                // Read data BEFORE waiting to prevent pipe buffer deadlock
+                let data = pipe.fileHandleForReading.readDataToEndOfFile()
 
                 // Timeout to prevent hanging
                 let semaphore = DispatchSemaphore(value: 0)
@@ -530,13 +537,7 @@ class FeatureManager: ObservableObject {
 
                 if semaphore.wait(timeout: .now() + .milliseconds(500)) == .timedOut {
                     task.terminate()
-                    DispatchQueue.main.async {
-                        self?.isLoadingProcesses = false
-                    }
-                    return
                 }
-
-                let data = pipe.fileHandleForReading.availableData
                 if let output = String(data: data, encoding: .utf8) {
                     let lines = output.components(separatedBy: "\n").dropFirst()
 
@@ -609,7 +610,16 @@ class FeatureManager: ObservableObject {
             try process.run()
             // Read BEFORE waiting to prevent deadlock
             let data = pipe.fileHandleForReading.readDataToEndOfFile()
-            process.waitUntilExit()
+
+            let duSemaphore = DispatchSemaphore(value: 0)
+            DispatchQueue.global().async {
+                process.waitUntilExit()
+                duSemaphore.signal()
+            }
+            if duSemaphore.wait(timeout: .now() + 5.0) == .timedOut {
+                process.terminate()
+                return calculateDirectorySizeSlow(path: path)
+            }
 
             if let output = String(data: data, encoding: .utf8),
                let sizeStr = output.split(separator: "\t").first,
@@ -700,7 +710,7 @@ class FeatureManager: ObservableObject {
 
     private func getBatteryHealthFromIOReg() {
         let task = Process()
-        task.launchPath = "/usr/sbin/ioreg"
+        task.executableURL = URL(fileURLWithPath: "/usr/sbin/ioreg")
         task.arguments = ["-r", "-c", "AppleSmartBattery", "-d", "1"]
 
         let pipe = Pipe()
@@ -797,7 +807,7 @@ class FeatureManager: ObservableObject {
     private func getThermalState() {
         // Use pmset -g therm to get thermal info
         let task = Process()
-        task.launchPath = "/usr/bin/pmset"
+        task.executableURL = URL(fileURLWithPath: "/usr/bin/pmset")
         task.arguments = ["-g", "therm"]
 
         let pipe = Pipe()
@@ -919,7 +929,14 @@ class FeatureManager: ObservableObject {
                     task.standardOutput = FileHandle.nullDevice
                     task.standardError = FileHandle.nullDevice
                     try task.run()
-                    task.waitUntilExit()
+                    let mpSemaphore = DispatchSemaphore(value: 0)
+                    DispatchQueue.global().async {
+                        task.waitUntilExit()
+                        mpSemaphore.signal()
+                    }
+                    if mpSemaphore.wait(timeout: .now() + 10.0) == .timedOut {
+                        task.terminate()
+                    }
                 } catch {}
             }
         }

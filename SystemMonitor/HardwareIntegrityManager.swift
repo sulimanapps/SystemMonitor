@@ -119,55 +119,36 @@ class HardwareIntegrityManager: ObservableObject {
             guard let self = self else { return }
 
             // 1. Basic System Info
-            self.updateProgress(0.05, task: "Initializing scan engine...")
-            Thread.sleep(forTimeInterval: 0.4)
-
             self.updateProgress(0.1, task: "Reading system information...")
-            Thread.sleep(forTimeInterval: 0.3)
             self.collectBasicSystemInfo()
 
             // 2. Hardware Identifiers
             self.updateProgress(0.2, task: "Verifying hardware identifiers...")
-            Thread.sleep(forTimeInterval: 0.5)
             self.collectHardwareIdentifiers()
-
-            self.updateProgress(0.3, task: "Checking serial number consistency...")
-            Thread.sleep(forTimeInterval: 0.4)
 
             // 3. Battery Analysis
             self.updateProgress(0.4, task: "Analyzing battery health...")
-            Thread.sleep(forTimeInterval: 0.5)
             self.analyzeBattery()
-
-            self.updateProgress(0.5, task: "Checking battery cycle history...")
-            Thread.sleep(forTimeInterval: 0.3)
 
             // 4. Storage Check
             self.updateProgress(0.6, task: "Scanning storage integrity...")
-            Thread.sleep(forTimeInterval: 0.5)
             self.checkStorage()
 
             // 5. Display Info
             self.updateProgress(0.7, task: "Verifying display components...")
-            Thread.sleep(forTimeInterval: 0.4)
             self.checkDisplay()
 
             // 6. Memory Check
             self.updateProgress(0.8, task: "Analyzing memory configuration...")
-            Thread.sleep(forTimeInterval: 0.4)
             self.checkMemory()
 
             // 7. Consistency Analysis
-            self.updateProgress(0.88, task: "Cross-referencing hardware data...")
-            Thread.sleep(forTimeInterval: 0.5)
+            self.updateProgress(0.9, task: "Cross-referencing hardware data...")
             self.analyzeConsistency()
 
             // 8. Calculate Score
             self.updateProgress(0.95, task: "Calculating integrity score...")
-            Thread.sleep(forTimeInterval: 0.4)
             self.calculateOverallScore()
-
-            Thread.sleep(forTimeInterval: 0.3)
 
             DispatchQueue.main.async {
                 self.scanProgress = 1.0
@@ -683,7 +664,16 @@ class HardwareIntegrityManager: ObservableObject {
         do {
             try task.run()
             let data = pipe.fileHandleForReading.readDataToEndOfFile()
-            task.waitUntilExit()
+
+            let semaphore = DispatchSemaphore(value: 0)
+            DispatchQueue.global().async {
+                task.waitUntilExit()
+                semaphore.signal()
+            }
+            if semaphore.wait(timeout: .now() + 10.0) == .timedOut {
+                task.terminate()
+            }
+
             return String(data: data, encoding: .utf8) ?? ""
         } catch {
             return ""

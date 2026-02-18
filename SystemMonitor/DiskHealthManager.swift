@@ -83,7 +83,10 @@ class DiskHealthManager: ObservableObject {
         do {
             try process.run()
             let data = pipe.fileHandleForReading.readDataToEndOfFile()
-            process.waitUntilExit()
+
+            let sem = DispatchSemaphore(value: 0)
+            DispatchQueue.global().async { process.waitUntilExit(); sem.signal() }
+            if sem.wait(timeout: .now() + 5.0) == .timedOut { process.terminate() }
 
             if let plist = try? PropertyListSerialization.propertyList(from: data, format: nil) as? [String: Any],
                let allDisks = plist["AllDisksAndPartitions"] as? [[String: Any]] {
@@ -142,7 +145,10 @@ class DiskHealthManager: ObservableObject {
         do {
             try process.run()
             let data = pipe.fileHandleForReading.readDataToEndOfFile()
-            process.waitUntilExit()
+
+            let sem = DispatchSemaphore(value: 0)
+            DispatchQueue.global().async { process.waitUntilExit(); sem.signal() }
+            if sem.wait(timeout: .now() + 5.0) == .timedOut { process.terminate() }
 
             if let plist = try? PropertyListSerialization.propertyList(from: data, format: nil) as? [String: Any] {
                 info["name"] = plist["MediaName"] as? String ?? plist["IORegistryEntryName"] as? String ?? deviceIdentifier
@@ -181,7 +187,10 @@ class DiskHealthManager: ObservableObject {
         do {
             try process.run()
             let data = pipe.fileHandleForReading.readDataToEndOfFile()
-            process.waitUntilExit()
+
+            let sem = DispatchSemaphore(value: 0)
+            DispatchQueue.global().async { process.waitUntilExit(); sem.signal() }
+            if sem.wait(timeout: .now() + 10.0) == .timedOut { process.terminate() }
 
             if let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
                let storageData = json["SPStorageDataType"] as? [[String: Any]] {
